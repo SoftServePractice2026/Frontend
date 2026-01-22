@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom";
 import Button from "../ui/Button";
-import { ThemeToggle } from "@/features/theme";
 import clsx from "clsx";
 import Logo from "@/assets/svg/components/Logo";
+import { UserMenu } from "@/features/user/components/UserMenu";
 
 const Header = () => {
 
@@ -35,6 +35,7 @@ const Header = () => {
                 <div className="flex gap-4">
                     <Button>Увійти</Button>
                     <Button>Зареєструватися</Button>
+                    <UserMenu/>
                 </div>
             </div>
         </>

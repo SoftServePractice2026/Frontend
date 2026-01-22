@@ -1,31 +1,46 @@
-import { ThemeContext } from "@/features/theme/context/ThemeContext";
 import type { Theme } from "@/features/theme/model/types";
-import { useEffect, useState, type ReactNode } from "react";
+import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 
-const ThemeProvider = ({ children }: { children: ReactNode }) => {
-    const [theme, setTheme] = useState<Theme>("dark");
-
-    useEffect(() => {
-        const savedTheme = localStorage.getItem("theme") as Theme | null;
-        const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-
-        const initialTheme = savedTheme ?? (prefersDark ? "dark" : "light");
-        setTheme(initialTheme);
-        document.documentElement.classList.toggle("dark", initialTheme === "dark");
-    }, []);
-
-    useEffect(() => {
-        document.documentElement.classList.toggle("dark", theme === "dark");
-        localStorage.setItem("theme", theme);
-    }, [theme]);
-
-    const toggleTheme = () =>
-        setTheme((prev) => (prev === "light" ? "dark" : "light"));
-
-    return (
-        <ThemeContext.Provider value={{ theme, toggleTheme }}>
-            {children}
-        </ThemeContext.Provider>);
+interface ThemeContextValue {
+  theme: Theme;
+  setTheme: (theme: Theme) => void;
 }
 
-export default ThemeProvider;
+const ThemeContext = createContext<ThemeContextValue>({
+  theme: "dark",
+  setTheme: () => {},
+});
+
+const THEME_KEY = "theme";
+
+interface ThemeProviderProps {
+  children: ReactNode;
+  defaultTheme?: Theme;
+}
+
+export const ThemeProvider = ({ children, defaultTheme = "dark" }: ThemeProviderProps) => {
+  const [theme, setTheme] = useState<Theme>(() => {
+    try {
+      const saved = localStorage.getItem(THEME_KEY) as Theme | null;
+      if (saved) return saved;
+      return defaultTheme;
+    } catch {
+      return defaultTheme;
+    }
+  });
+
+  useEffect(() => {
+    const root = document.documentElement;
+    root.classList.remove("light", "dark");
+    root.classList.add(theme);
+    localStorage.setItem(THEME_KEY, theme);
+  }, [theme]);
+
+  return (
+    <ThemeContext.Provider value={{ theme, setTheme }}>
+      {children}
+    </ThemeContext.Provider>
+  );
+};
+
+export const useTheme = () => useContext(ThemeContext);

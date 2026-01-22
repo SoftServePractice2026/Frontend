@@ -1,20 +1,34 @@
 import clsx from "clsx";
-import type { ReactNode } from "react";
+import type { ButtonHTMLAttributes, ReactNode } from "react";
 
-const Button = ({ children }: { children: ReactNode }) => {
+interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+    children: ReactNode;
+    onClick?: React.MouseEventHandler<HTMLButtonElement>;
+}
+
+const Button = ({
+    children,
+    onClick,
+    className,
+}: ButtonProps) => {
     return (
-        <button type="button" className={clsx(
-            "dark:text-button-dark",
-            "dark:hover:text-secondary-dark dark:hover:border-secondary-dark/50",
-            "dark:bg-primary-dark/10",
-            "border dark:border-primary-dark/20",
-            "rounded-xl p-[10px]",
-            "transition transition-color",
-            "font-montserrat font-normal"
-        )}>
+        <button
+            type="button"
+            onClick={onClick}
+            className={clsx(
+                "dark:text-button-dark",
+                "dark:hover:text-secondary-dark dark:hover:border-secondary-dark/50",
+                "dark:bg-primary-dark/10",
+                "border dark:border-primary-dark/20",
+                "rounded-xl p-[10px]",
+                "transition transition-colors",
+                "font-montserrat font-normal",
+                className
+            )}
+        >
             {children}
         </button>
     );
-}
+};
 
 export default Button;
