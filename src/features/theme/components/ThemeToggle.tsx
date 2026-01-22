@@ -5,25 +5,35 @@ export const ThemeToggle = () => {
     const { theme, toggleTheme } = useTheme();
     const isDark = theme === "dark";
 
+    const sizeClasses = {
+        sm: {
+            wrapper: "w-36 h-16 p-1",
+            knob: "w-14 h-14",
+            knobOffset: "calc(100% - 3.5rem)",
+        }
+    };
+
     return (
         <>
             <button
                 onClick={toggleTheme}
                 aria-label="Toggle theme"
                 className={clsx(
-                    "relative w-48 h-24 rounded-full p-2",
+                    "relative rounded-full",
                     "transition-colors duration-700",
-                    "bg-slate-950 dark:bg-slate-200"
+                    "bg-slate-950 dark:bg-slate-200",
+                    sizeClasses.sm.wrapper,
                 )}
             >
                 {/* slider */}
                 <div
                     className={clsx(
-                        "relative h-20 w-20 rounded-full",
+                        "relative rounded-full",
                         "transition-all duration-700",
                         isDark
                             ? "ml-0 bg-gray-100 shadow-[0_0_100px_rgba(255,255,255,1)]"
-                            : "ml-[calc(100%-5rem)] bg-yellow-300 shadow-[0_0_100px_rgba(249,240,104,1)]"
+                            : `ml-[${sizeClasses.sm.knobOffset}] bg-yellow-300 shadow-[0_0_100px_rgba(249,240,104,1)]`,
+                        sizeClasses.sm.knob,
                     )}
                 >
                     {/* moon craters */}
