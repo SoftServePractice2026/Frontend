@@ -44,7 +44,7 @@ export function ThemeDropdown() {
                                 "text-left text-sm",
                                 "hover:bg-gray-100 dark:hover:bg-gray-800",
                                 theme === t ? 
-                                    "font-semibold text-accent-dark dark:text-accent-dark" :
+                                    "font-semibold text-accent-light dark:text-accent-dark" :
                                     "dark:text-primary-dark"
                             )}
                         >

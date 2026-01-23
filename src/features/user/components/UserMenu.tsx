@@ -24,8 +24,8 @@ export function UserMenu() {
         <div className="relative" ref={refMenu}>
             <Button onClick={handleMenuClick} className={clsx(
                 isActiveMenuButton ?
-                    "dark:text-secondary-dark dark:border-secondary-dark/50" :
-                    "dark:text-button-dark dark:border-primary-dark/20"
+                    "text-secondary-light dark:text-secondary-dark border-secondary-light/50 dark:border-secondary-dark/50" :
+                    "text-button-light dark:text-button-dark border-primary-light/20 dark:border-primary-dark/20"
             )}>Меню</Button>
 
             {open && (

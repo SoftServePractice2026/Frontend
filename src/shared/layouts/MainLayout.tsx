@@ -4,7 +4,7 @@ import Header from "./Header";
 const MainLayout = () => {
     return (
         <>
-            <main className="bg-stone-950 h-dvh">
+            <main className="dark:bg-stone-950 bg-white h-dvh">
                 <Header/>
                 <Outlet />
             </main>

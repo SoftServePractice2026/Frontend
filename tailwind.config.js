@@ -13,22 +13,22 @@ module.exports = {
 
       colors: {
         primary: {
-          light: "",
+          light: "#040D12",
           dark: "#FFFFFF",
         },
 
         secondary: {
-          light: "",
+          light: "#00ADB5",
           dark: "#E50914",
         },
 
         accent: {
-          light: "",
+          light: "#C400C6",
           dark: "#D4AF37",
         },
 
         button: {
-          light: "",
+          light: "#1A1A1B",
           dark: "#F5F5F7",
         }
       }
