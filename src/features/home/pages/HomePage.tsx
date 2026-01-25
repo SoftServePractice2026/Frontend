@@ -22,12 +22,12 @@ const HomePage = () => {
                 {/* { Градієнти } */}
                 <div className={clsx(
                     "absolute inset-0 z-0 bg-gradient-to-b",
-                    "from-[#FFF2E0], via-[#FFF8F0], to-[#FFE6D2]",
+                    "from-[#FFFFFC] via-[#F5F5F5]/50 to-[#FFFFFC]",
                     "dark:from-[#0A0A0FCC] dark:via-[#0A0A0F99] dark:to-[#0A0A0F]"
                 )} />
                 <div className={clsx(
                     "absolute inset-0 z-0 bg-gradient-to-r ",
-                    "from-[#FFE0C8] via-[#FFF8F000] to-[#FFE0C8]",
+                    "from-[#FFFFFC] via-[#F5F5F5]/50 to-[#FFFFFC]",
                     "dark:from-[#0A0A0F] dark:via-[#0A0A0F00] dark:to-[#0A0A0F80]"
                 )} />
 
@@ -50,7 +50,8 @@ const HomePage = () => {
                             >кінематографу</span>
                         </h1>
                         <p className={clsx(
-                            "text-description-light dark:text-description-dark max-w-xs sm:max-w-2xl font-montserrat font-base",
+                            "text-description-light dark:text-description-dark",
+                            "max-w-xs sm:max-w-2xl font-montserrat font-base",
                             "text-xs sm:text-sm lg:text-base"
                         )}
                         >Ми зібрали актуальну афішу, зручний розклад і швидке бронювання квитків в одному місці. Обирай фільм, знаходь зручний сеанс і насолоджуйся кіно

@@ -23,7 +23,7 @@ module.exports = {
         },
 
         accent: {
-          light: "#C400C6",
+          light: "#FF6D1F",
           dark: "#FFD700",
         },
 
@@ -33,7 +33,7 @@ module.exports = {
         },
 
         description: {
-          light: "",
+          light: "#3A3A3A",
           dark: "#8B8B9A",
         }
       }
