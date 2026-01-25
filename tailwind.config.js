@@ -19,17 +19,22 @@ module.exports = {
 
         secondary: {
           light: "#00ADB5",
-          dark: "#E50914",
+          dark: "#C8102E",
         },
 
         accent: {
           light: "#C400C6",
-          dark: "#D4AF37",
+          dark: "#FFD700",
         },
 
         button: {
           light: "#1A1A1B",
           dark: "#F5F5F7",
+        },
+
+        description: {
+          light: "",
+          dark: "#8B8B9A",
         }
       }
     },

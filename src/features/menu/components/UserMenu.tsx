@@ -25,7 +25,7 @@ export function UserMenu() {
             </Button>
 
             {menuView && (
-                <div className="absolute right-0 mt-2 w-48 border shadow-lg bg-white dark:bg-gray-900 dark:border-gray-700">
+                <div className="absolute right-0 mt-2 w-48 border shadow-lg bg-white dark:bg-gray-900 dark:border-gray-700 z-20">
                     {menuView === "main" && (
                         <MainMenu
                             itemOnMenuClassName={itemOnMenuClassName}
