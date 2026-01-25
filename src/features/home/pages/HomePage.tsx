@@ -4,12 +4,12 @@ import clsx from "clsx";
 const HomePage = () => {
 
     const statisticHeaderClassName = clsx(
-        "text-accent-light dark:text-accent-dark",
-        "text-4xl font-bebasNeue"
+        "text-accent-light dark:text-accent-dark font-bebasNeue",
+        "text-xl sm:text-3xl lg:text-4xl"
     );
     const statisticDescriptionClassName = clsx(
         "text-description-light dark:text-description-dark",
-        "text-sm font-montserrat"
+        "text-xs sm:text-sm font-montserrat"
     );
 
     return (
@@ -33,24 +33,36 @@ const HomePage = () => {
 
                 {/* { Основний контент } */}
                 <div className={clsx("flex flex-col items-center justify-center z-10")}>
-                    <div className={clsx("text-center mb-16")}>
-                        <h1 className={clsx("mb-7")}>
+                    <div className={clsx("text-center mb-8 sm:mb-16")}>
+                        <h1 className={clsx("mb-4 sm:mb-7")}>
                             <span className={clsx(
                                 "",
                                 "text-primary-light dark:text-primary-dark uppercase",
-                                "font-montserrat font-bold text-7xl"
+                                "font-montserrat font-bold",
+                                "text-3xl sm:text-5xl lg:text-7xl"
                             )}
                             >всесвіт</span><br />
                             <span className={clsx(
                                 "text-secondary-light dark:text-secondary-dark uppercase",
-                                "font-montserrat font-bold text-7xl"
+                                "font-montserrat font-bold",
+                                "text-3xl sm:text-5xl lg:text-7xl"
                             )}
                             >кінематографу</span>
                         </h1>
-                        <p className={clsx("text-description-light dark:text-description-dark max-w-2xl font-montserrat font-base")}>Ми зібрали актуальну афішу, зручний розклад і швидке бронювання квитків в одному місці. Обирай фільм, знаходь зручний сеанс і насолоджуйся кіно </p>
+                        <p className={clsx(
+                            "text-description-light dark:text-description-dark max-w-xs sm:max-w-2xl font-montserrat font-base",
+                            "text-xs sm:text-sm lg:text-base"
+                        )}
+                        >Ми зібрали актуальну афішу, зручний розклад і швидке бронювання квитків в одному місці. Обирай фільм, знаходь зручний сеанс і насолоджуйся кіно
+                        </p>
                     </div>
-                    <Button className={clsx("px-20 py-4 mb-16 font-semibold")}>Переглянути афішу</Button>
-                    <div className={clsx("flex gap-16")}>
+                    <Button className={clsx(
+                        "py-4 font-semibold",
+                        "px-4 sm:px-16 lg:px-20",
+                        "mb-8 sm:mb-16"
+                    )}
+                    >Переглянути афішу</Button>
+                    <div className={clsx("flex gap-4 sm:gap-12 lg:gap-16")}>
                         <p className={clsx("flex flex-col items-center")}>
                             <span className={statisticHeaderClassName}>10+</span>
                             <span className={statisticDescriptionClassName}>Фільмів</span>
