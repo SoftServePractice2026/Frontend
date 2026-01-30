@@ -12,7 +12,7 @@ export function MainMenu({ itemOnMenuClassName, onThemeClick }: Props) {
     <>
       <div className={clsx("block sm:hidden")}>
         <Link to="/" className={itemOnMenuClassName}>Увійти</Link>
-        <Link to="/" className={itemOnMenuClassName}>Зареєструватися</Link>
+        <Link to="/registration" className={itemOnMenuClassName}>Зареєструватися</Link>
       </div>
 
       <Divider className={clsx("block sm:hidden")}/>

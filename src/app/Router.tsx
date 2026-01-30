@@ -3,16 +3,20 @@ import App from "./App";
 import MainLayout from "@/shared/layouts/MainLayout";
 import HomePage from "@/features/home/pages/HomePage";
 import NotFoundPage from "@/features/home/pages/NotFoundPage";
+import RegistrationPage from "@/features/user/pages/RegistrationPage";
 
 export const Router = createBrowserRouter([
     {
-        element: <App/>,
-        errorElement: <NotFoundPage/>, 
+        element: <App />,
+        errorElement: <NotFoundPage />,
         children: [
             {
-                element: <MainLayout/>,
+                element: <MainLayout />,
                 children: [
-                    {path: "/", element: <HomePage/>}
+                    { path: "/", element: <HomePage /> },
+                    { path: "/registration", element: <RegistrationPage /> },
+                    { path: "/login", element: <RegistrationPage /> },
+                    { path: "/recovery", element: <RegistrationPage /> },
                 ]
             }
         ]
