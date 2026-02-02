@@ -24,7 +24,9 @@ module.exports = {
 
         accent: {
           light: "#FF6D1F",
+          light_second: "#dfa3ff",
           dark: "#FFD700",
+          dark_second: "#D4AF37",
         },
 
         button: {

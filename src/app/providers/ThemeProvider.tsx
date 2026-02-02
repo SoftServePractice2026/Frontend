@@ -1,4 +1,4 @@
-import type { Theme } from "@/features/theme/model/types";
+import type { Theme } from "@/features/menu/types";
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 
 interface ThemeContextValue {
