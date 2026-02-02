@@ -4,11 +4,16 @@ import clsx from "clsx";
 import Logo from "@/assets/svg/components/Logo";
 import { UserMenu } from "@/features/menu/components/UserMenu";
 import { useAuth } from "@/app/providers/AuthProvider";
+import Avatar from "@/assets/svg/components/Avatar";
+import { truncate } from "string-truncate";
 
 const Header = () => {
 
     const navigate = useNavigate();
     const { isAuth, user, logout } = useAuth();
+
+    console.log(user);
+
 
     const linkClassName = clsx(
         "flex items-center",
@@ -61,7 +66,7 @@ const Header = () => {
                 </nav>
 
                 {/* { Options } */}
-                <div className="flex gap-2 sm:gap-4">
+                <div className="flex gap-2 sm:gap-4 items-center">
                     {!isAuth ? (
                         <>
                             <Button className="hidden sm:block" onClick={() => navigate("/login")}>Увійти</Button>
@@ -69,7 +74,17 @@ const Header = () => {
                         </>
                     ) : (
                         <>
-                            <Button className="hidden sm:block" onClick={() => logout()}>Logout</Button>
+                            <div className="flex flex-col sm:flex-row items-center gap-1">
+                                <Avatar className={clsx(
+                                    "text-secondary-light dark:text-secondary-dark",
+                                    "w-8 h-8"
+                                )} />
+                                <p className={clsx(
+                                    "text-primary-light dark:text-primary-dark",
+                                    "font-montserrat"
+                                )}>{truncate(user?.firstName ?? "", 8) }</p>
+                            </div>
+                            <Button className="hidden sm:block" onClick={() => logout()}>Вийти</Button>
                         </>
                     )}
                     <UserMenu />

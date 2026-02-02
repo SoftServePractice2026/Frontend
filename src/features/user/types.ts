@@ -13,7 +13,7 @@ export interface LoginRequest {
 
 export interface IdentityDetailsDto {
     id: string;
-    firstname: string;
+    firstName: string;
     lastName: string;
     birthDate: string;
     email: string;

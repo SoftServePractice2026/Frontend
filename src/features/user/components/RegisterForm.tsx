@@ -117,7 +117,7 @@ const RegisterForm = () => {
                         />
                         <Input
                             id="lastName"
-                            label="Призвіще"
+                            label="Прізвище"
                             type="text"
                             placeholder="Напр: Мельник"
                             {...register("lastName")}

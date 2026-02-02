@@ -116,7 +116,7 @@ const LoginForm = () => {
                     />
 
                     <div className={clsx(
-                        "flex gap-[80px]"
+                        "flex gap-[20px] sm:gap-[80px]"
                     )}>
                         <Link to="/recovery" className={clsx(
                             "text-secondary-light dark:text-secondary-dark"
