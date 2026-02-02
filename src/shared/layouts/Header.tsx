@@ -3,10 +3,12 @@ import Button from "../ui/Button";
 import clsx from "clsx";
 import Logo from "@/assets/svg/components/Logo";
 import { UserMenu } from "@/features/menu/components/UserMenu";
+import { useAuth } from "@/app/providers/AuthProvider";
 
 const Header = () => {
 
     const navigate = useNavigate();
+    const { isAuth, user, logout } = useAuth();
 
     const linkClassName = clsx(
         "flex items-center",
@@ -60,8 +62,16 @@ const Header = () => {
 
                 {/* { Options } */}
                 <div className="flex gap-2 sm:gap-4">
-                    <Button className="hidden sm:block">Увійти</Button>
-                    <Button className="hidden sm:block" onClick={() => navigate("/registration")}>Зареєструватися</Button>
+                    {!isAuth ? (
+                        <>
+                            <Button className="hidden sm:block" onClick={() => navigate("/login")}>Увійти</Button>
+                            <Button className="hidden sm:block" onClick={() => navigate("/registration")}>Зареєструватися</Button>
+                        </>
+                    ) : (
+                        <>
+                            <Button className="hidden sm:block" onClick={() => logout()}>Logout</Button>
+                        </>
+                    )}
                     <UserMenu />
                 </div>
             </div>

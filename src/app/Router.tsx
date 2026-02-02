@@ -4,6 +4,7 @@ import MainLayout from "@/shared/layouts/MainLayout";
 import HomePage from "@/features/home/pages/HomePage";
 import NotFoundPage from "@/features/home/pages/NotFoundPage";
 import RegistrationPage from "@/features/user/pages/RegistrationPage";
+import LoginPage from "@/features/user/pages/LoginPage";
 
 export const Router = createBrowserRouter([
     {
@@ -15,7 +16,7 @@ export const Router = createBrowserRouter([
                 children: [
                     { path: "/", element: <HomePage /> },
                     { path: "/registration", element: <RegistrationPage /> },
-                    { path: "/login", element: <RegistrationPage /> },
+                    { path: "/login", element: <LoginPage /> },
                     { path: "/recovery", element: <RegistrationPage /> },
                 ]
             }

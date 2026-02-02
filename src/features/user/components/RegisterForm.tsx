@@ -1,11 +1,16 @@
 import Input from "@/shared/ui/Input";
-import type { RegisterRequest } from "../types";
+import { type AuthResponse, type LoginRequest, type RegisterRequest } from "../types";
 import z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import clsx from "clsx";
 import SubmitButton from "@/shared/ui/SubmitButton";
 import { Link } from "react-router-dom";
+import { Popup, type PopupType } from "@/shared/ui/Popup";
+import { useState } from "react";
+import type { AppError } from "@/shared/types/errors";
+import { api } from "@/shared/api/Axios";
+import { useAuth } from "@/app/providers/AuthProvider";
 
 //Validation schema
 const registerSchema = z.object({
@@ -20,13 +25,71 @@ const registerSchema = z.object({
 type RegisterFormValues = z.infer<typeof registerSchema>;
 
 const RegisterForm = () => {
+    const [popup, setPopup] = useState<{
+        open: boolean;
+        type: PopupType;
+        message: string;
+    }>({
+        open: false,
+        type: "success",
+        message: "",
+    });
+
+    const { login } = useAuth();
 
     const { register, handleSubmit, formState: { errors, isSubmitting }, } = useForm<RegisterFormValues>({
         resolver: zodResolver(registerSchema),
     })
 
-    const onSumbit = (data: RegisterFormValues) => {
-        console.log("Register data: ", data);
+    const onSumbit = async (data: RegisterFormValues) => {
+        const request: RegisterRequest = {
+            email: data.email,
+            password: data.password,
+            birthDate: `${data.birthDate}T00:00:00.000Z`,
+            firstName: data.firstName,
+            lastName: data.lastName,
+        }
+
+        try {
+            const result = await api.post<AuthResponse>("/v1/registration", request);
+            await login({email: request.email, password: request.password});
+            setPopup({
+                open: true,
+                type: "success",
+                message: "Дані успішно збережено",
+            });
+        } catch (err) {
+
+            const error = err as AppError;
+            console.log(error);
+
+            switch (error.kind) {
+                case "validation":
+                    const firstField = Object.keys(error.errors)[0];
+                    const firstMessage = error.errors[firstField][0];
+                    setPopup({
+                        open: true,
+                        type: "error",
+                        message: firstMessage,
+                    });
+                    break;
+
+                case "business":
+                    setPopup({
+                        open: true,
+                        type: "error",
+                        message: error.message,
+                    });
+                    break;
+
+                default:
+                    setPopup({
+                        open: true,
+                        type: "error",
+                        message: "Сталася невідома помилка",
+                    });
+            }
+        }
     }
 
     return (
@@ -98,8 +161,16 @@ const RegisterForm = () => {
                     )}>Напишіть нам</Link></p>
                 </div>
             </form>
+
+            <Popup
+                open={popup.open}
+                type={popup.type}
+                message={popup.message}
+                autoCloseMs={5000}
+                onClose={() => setPopup({ ...popup, open: false })}
+                redirect="/"
+            />
         </>
     );
 }
-
 export default RegisterForm;
