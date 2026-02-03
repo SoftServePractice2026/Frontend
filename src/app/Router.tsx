@@ -5,8 +5,8 @@ import HomePage from "@/features/home/pages/HomePage";
 import NotFoundPage from "@/features/home/pages/NotFoundPage";
 import RegistrationPage from "@/features/user/pages/RegistrationPage";
 import LoginPage from "@/features/user/pages/LoginPage";
-import { ProtectedRoute } from "./ProtectedRoute";
 import UnauthorizedPage from "@/features/user/pages/UnauthorizedPage";
+import AfishaPage from "@/features/poster/pages/AfishaPage";
 
 export const Router = createBrowserRouter([
     {
@@ -20,7 +20,7 @@ export const Router = createBrowserRouter([
                     { path: "/registration", element: <RegistrationPage /> },
                     { path: "/login", element: <LoginPage /> },
                     { path: "/recovery", element: <RegistrationPage /> },
-
+                    { path: "/afisha", element: <AfishaPage /> },
                     // User path example
                     // { path: "...", element: (<ProtectedRoute requiredRoles={["User, Admin"]}>...</ProtectedRoute>)}
 

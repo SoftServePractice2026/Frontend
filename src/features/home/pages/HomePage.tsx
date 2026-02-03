@@ -1,5 +1,6 @@
 import Button from "@/shared/ui/Button";
 import clsx from "clsx";
+import { Link } from "react-router-dom";
 
 const HomePage = () => {
 
@@ -57,12 +58,16 @@ const HomePage = () => {
                         >Ми зібрали актуальну афішу, зручний розклад і швидке бронювання квитків в одному місці. Обирай фільм, знаходь зручний сеанс і насолоджуйся кіно
                         </p>
                     </div>
-                    <Button className={clsx(
-                        "py-4 font-semibold",
-                        "px-4 sm:px-16 lg:px-20",
-                        "mb-8 sm:mb-16"
-                    )}
-                    >Переглянути афішу</Button>
+
+                    <Link to="/afisha">
+                        <Button className={clsx(
+                            "py-4 font-semibold",
+                            "px-4 sm:px-16 lg:px-20",
+                            "mb-8 sm:mb-16"
+                        )}>
+                            Переглянути афішу
+                        </Button>
+                    </Link>
                     <div className={clsx("flex gap-4 sm:gap-12 lg:gap-16")}>
                         <p className={clsx("flex flex-col items-center")}>
                             <span className={statisticHeaderClassName}>10+</span>
