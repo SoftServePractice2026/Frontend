@@ -35,7 +35,7 @@ export const SearchBar = ({ query, setQuery, isFiltersOpen, setIsFiltersOpen }: 
                     placeholder="Пошук фільму"
                     className={clsx(
                         "w-full bg-transparent outline-none",
-                        "text-slate-900 placeholder:text-slate-400 caret-slate-900",
+                        "text-black placeholder:text-black/40 caret-black",
                         "dark:text-white dark:placeholder:text-white/40 dark:caret-white"
                     )}
                 />

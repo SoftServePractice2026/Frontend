@@ -22,8 +22,9 @@ const Header = () => {
         "font-montserrat font-medium text-base leading-none text-center",
         "transition",
         location.pathname === path
-            ? "text-secondary-light dark:text-secondary-dark"
-            : "text-primary-light dark:text-primary-dark hover:text-secondary-light dark:hover:text-secondary-dark"
+            ? "text-red-500 dark:text-secondary-dark"
+            : "text-primary-light dark:text-primary-dark hover:text-red-500 dark:hover:text-secondary-dark"
+
     );
 
     return (

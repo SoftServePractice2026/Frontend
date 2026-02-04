@@ -21,8 +21,8 @@ export const FiltersPanel = ({
         <div
             className={clsx(
                 "mb-6 rounded-2xl border p-4 sm:p-5",
-                "bg-black/5 border-black/10",
-                "dark:bg-white/5 dark:border-white/10"
+                "bg-primary-dark/5 border-primary-light/10",
+                "dark:bg-primary-dark/10 dark:border-primary-dark/10"
             )}
         >
             {/* Genres */}
@@ -30,8 +30,8 @@ export const FiltersPanel = ({
                 <div
                     className={clsx(
                         "text-xs mb-2",
-                        "text-black/60",
-                        "dark:text-white/70"
+                        "text-description-light",
+                        "dark:text-description-dark"
                     )}
                 >
                     Жанри
@@ -50,14 +50,15 @@ export const FiltersPanel = ({
                                     "px-3 py-1.5 rounded-full text-xs border transition",
                                     isActive
                                         ? clsx(
-                                            "bg-[#c8102e] text-white border-[#c8102e]/60",
-                                            "shadow-sm shadow-[#c8102e]/20"
+                                            "bg-secondary-light text-white border-secondary-light/60",
+                                            "shadow-sm shadow-secondary-light/20"
                                         )
 
                                         : clsx(
                                             "bg-transparent",
-                                            "border-black/10 text-black/70 hover:text-black hover:border-black/20",
-                                            "dark:border-white/10 dark:text-white/70 dark:hover:text-white dark:hover:border-white/20"
+                                            "border-primary-light/10 text-description-light hover:text-primary-light hover:border-primary-light/20",
+                                            "dark:border-primary-dark/10 dark:text-description-dark dark:hover:text-primary-dark dark:hover:border-primary-dark/20"
+
                                         )
                                 )}>
 
@@ -74,8 +75,8 @@ export const FiltersPanel = ({
                 <div
                     className={clsx(
                         "text-xs mb-2",
-                        "text-black/60",
-                        "dark:text-white/70"
+                        "text-primary-light",
+                        "text-primary-dark"
                     )}
                 >
                     Дата
@@ -94,8 +95,8 @@ export const FiltersPanel = ({
                                     "min-w-[52px] px-2 py-2 rounded-xl border text-center transition",
                                     isActive
                                         ? clsx(
-                                            "border-yellow-500/60 bg-yellow-500/10 text-black",
-                                            "dark:border-yellow-400/80 dark:bg-yellow-400/10 dark:text-white"
+                                            "border-accent-red bg-accent-light/5 text-black",
+                                            "dark:border-accent-dark_second bg-accent-light/10 dark:text-white"
                                         )
 
                                         : clsx(

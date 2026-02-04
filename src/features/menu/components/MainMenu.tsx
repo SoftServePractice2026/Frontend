@@ -15,7 +15,7 @@ export function MainMenu({ itemOnMenuClassName, onThemeClick }: Props) {
 
   const activeLinkClassName = (path: string) => clsx(
         itemOnMenuClassName,
-        location.pathname === path && "text-secondary-light dark:text-secondary-dark"
+      location.pathname === path && "text-red-500 dark:text-secondary-dark"
     );
 
   return (

@@ -7,6 +7,7 @@ import RegistrationPage from "@/features/user/pages/RegistrationPage";
 import LoginPage from "@/features/user/pages/LoginPage";
 import UnauthorizedPage from "@/features/user/pages/UnauthorizedPage";
 import AfishaPage from "@/features/poster/pages/AfishaPage";
+import ComingSoonPage from "@/features/upcoming/pages/ComingSoonPage";
 
 export const Router = createBrowserRouter([
     {
@@ -21,6 +22,7 @@ export const Router = createBrowserRouter([
                     { path: "/login", element: <LoginPage /> },
                     { path: "/recovery", element: <RegistrationPage /> },
                     { path: "/afisha", element: <AfishaPage /> },
+                    { path: "/coming-soon", element: <ComingSoonPage /> },
                     // User path example
                     // { path: "...", element: (<ProtectedRoute requiredRoles={["User, Admin"]}>...</ProtectedRoute>)}
 

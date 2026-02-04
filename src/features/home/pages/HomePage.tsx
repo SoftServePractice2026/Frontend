@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 const HomePage = () => {
 
     const statisticHeaderClassName = clsx(
-        "text-accent-light dark:text-accent-dark font-bebasNeue",
+        "text-accent-red dark:text-accent-dark font-bebasNeue",
         "text-xl sm:text-3xl lg:text-4xl"
     );
     const statisticDescriptionClassName = clsx(
@@ -42,13 +42,14 @@ const HomePage = () => {
                                 "font-montserrat font-bold",
                                 "text-3xl sm:text-5xl lg:text-7xl"
                             )}
-                            >всесвіт</span><br />
+                            >всесвіт</span><br/>
                             <span className={clsx(
                                 "text-secondary-light dark:text-secondary-dark uppercase",
                                 "font-montserrat font-bold",
                                 "text-3xl sm:text-5xl lg:text-7xl"
-                            )}
-                            >кінематографу</span>
+                            )}>
+                              кінематографу
+                            </span>
                         </h1>
                         <p className={clsx(
                             "text-description-light dark:text-description-dark",
