@@ -1,13 +1,11 @@
 import { useEffect, useState } from "react";
 import { api } from "@/shared/api/base.ts";
 
-// Твоя DTO: IdentityDetailsDto(Guid Id, string Name, string Email, IEnumerable<string> Roles)
 interface IdentityDetailsDto {
     id: string;
     name: string;
     email: string;
     roles: string[];
-    // Додаткові поля для форми (можуть бути null на бекенді)
     firstName?: string;
     lastName?: string;
     phone?: string;
@@ -74,7 +72,6 @@ const ProfilePage = () => {
                                 {userData.name || `${userData.firstName} ${userData.lastName}`}
                             </h2>
                             <p className="text-gray-500 text-sm italic font-light">{userData.email}</p>
-                            {/* Відображення ролей з твого IdentityDetailsDto */}
                             <div className="flex gap-2 mt-2">
                                 {userData.roles?.map(role => (
                                     <span key={role} className="text-[10px] bg-[#E12E2E]/10 text-[#E12E2E] px-2 py-0.5 rounded border border-[#E12E2E]/20 uppercase font-bold tracking-tighter">
