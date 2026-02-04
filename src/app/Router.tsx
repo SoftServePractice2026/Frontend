@@ -7,6 +7,7 @@ import RegistrationPage from "@/features/user/pages/RegistrationPage";
 import LoginPage from "@/features/user/pages/LoginPage";
 import { ProtectedRoute } from "./ProtectedRoute";
 import UnauthorizedPage from "@/features/user/pages/UnauthorizedPage";
+import BookingPage from "@/features/booking/pages/BookingPage.tsx";
 
 export const Router = createBrowserRouter([
     {
@@ -20,6 +21,7 @@ export const Router = createBrowserRouter([
                     { path: "/registration", element: <RegistrationPage /> },
                     { path: "/login", element: <LoginPage /> },
                     { path: "/recovery", element: <RegistrationPage /> },
+                    { path: "/booking", element: <BookingPage /> },
 
                     // User path example
                     // { path: "...", element: (<ProtectedRoute requiredRoles={["User, Admin"]}>...</ProtectedRoute>)}
