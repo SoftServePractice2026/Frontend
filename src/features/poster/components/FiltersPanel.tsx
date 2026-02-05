@@ -75,8 +75,8 @@ export const FiltersPanel = ({
                 <div
                     className={clsx(
                         "text-xs mb-2",
-                        "text-primary-light",
-                        "text-primary-dark"
+                        "text-description-light",
+                        "dark:text-description-dark"
                     )}
                 >
                     Дата

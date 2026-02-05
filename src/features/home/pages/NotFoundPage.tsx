@@ -16,7 +16,7 @@ const NotFoundPage = () => {
                 <div className="text-center max-w-md">
                     <h1 className={clsx(
                         "text-[120px] sm:text-[150px] md:text-[180px] font-bold",
-                        "text-gray-900 dark:text-accent-red",
+                        "text-gray-900 dark:text-primary-dark",
                     "mb-2"
                 )}>
                     404
@@ -36,6 +36,5 @@ const NotFoundPage = () => {
         </div>
     );
 };
-
 
 export default NotFoundPage;
