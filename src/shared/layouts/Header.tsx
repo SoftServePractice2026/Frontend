@@ -12,9 +12,6 @@ const Header = () => {
     const navigate = useNavigate();
     const { isAuth, user, logout } = useAuth();
 
-    console.log(user);
-
-
     const linkClassName = clsx(
         "flex items-center",
         "text-primary-light dark:text-primary-dark",
@@ -62,7 +59,7 @@ const Header = () => {
                     <Link to={"/"} className={linkClassName}>Афіша</Link>
                     <Link to={"/"} className={linkClassName}>Скоро у кіно</Link>
                     <Link to={"/"} className={linkClassName}>Про нас</Link>
-                    <Link to={"/"} className={linkClassName}>Допомога і контакти</Link>
+                    <Link to={"/contacts"} className={linkClassName}>Допомога і контакти</Link>
                 </nav>
 
                 {/* { Options } */}
@@ -87,7 +84,7 @@ const Header = () => {
                             <Button className="hidden sm:block" onClick={() => logout()}>Вийти</Button>
                         </>
                     )}
-                    <UserMenu />
+                   <UserMenu />
                 </div>
             </div>
         </>
