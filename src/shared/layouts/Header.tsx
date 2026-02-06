@@ -63,6 +63,10 @@ const Header = () => {
                     "hidden lg:flex",
                     "lg:gap-4 xl:gap-8",
                 )}>
+                    <Link to={"/"} className={linkClassName}>Афіша</Link>
+                    <Link to={"/"} className={linkClassName}>Скоро у кіно</Link>
+                    <Link to={"/"} className={linkClassName}>Про нас</Link>
+                    <Link to={"/contacts"} className={linkClassName}>Допомога і контакти</Link>
                     <Link to="/afisha" className={linkClassName("/afisha")}>Афіша</Link>
                     <Link to="/coming-soon" className={linkClassName("/coming-soon")}>Скоро у кіно</Link>
                     <Link to="/" className={linkClassName("/")}>Про нас</Link>
