@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { FaMapMarkerAlt, FaPhoneAlt, FaEnvelope } from "react-icons/fa";
 import clsx from "clsx";
-import { sendEmails } from "@/services/emails"; // Перевір, щоб шлях був правильним
+import { sendEmails } from "@/services/emails"; 
 
-// --- ТИПИ ---
+
 interface FormData {
   name: string;
   email: string;
@@ -19,17 +19,15 @@ interface ContactCardProps {
   subText?: string;
 }
 
-// --- СТИЛІ (Винесені окремо для чистоти коду) ---
+
 const STYLES = {
   pageWrapper: "min-h-screen flex flex-col items-center py-12 px-4 transition-colors duration-300 bg-gray-50 dark:bg-[#030305]",
   textTitle: "text-gray-900 dark:text-white font-montserrat",
   textDesc: "text-gray-600 dark:text-gray-400 font-montserrat",
-  // Використовуємо твій останній варіант кольорів
   cardBg: "bg-white dark:bg-[#0B0C10] border border-gray-200 dark:border-white/5 shadow-xl shadow-gray-200/50 dark:shadow-black/50",
   accentText: "text-teal-600 dark:text-[#D3122E]",
   iconBg: "bg-teal-50 text-teal-600 dark:bg-[#1F2026] dark:text-[#D3122E]",
   
-  // Кнопка з урахуванням стану disabled
   button: (isLoading: boolean) => clsx(
     "w-full font-bold py-4 rounded-lg transition-all transform shadow-lg uppercase tracking-wide",
     isLoading 
@@ -42,7 +40,6 @@ const STYLES = {
 };
 
 const ContactPage = () => {
-  // Стан форми
   const [formData, setFormData] = useState<FormData>({
     name: "",
     email: "",
@@ -51,7 +48,6 @@ const ContactPage = () => {
 
   const [status, setStatus] = useState<FormStatus>("idle");
 
-  // Обробник зміни полів
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -60,7 +56,6 @@ const ContactPage = () => {
     }));
   };
 
-  // Обробник відправки
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setStatus("loading");
@@ -69,9 +64,8 @@ const ContactPage = () => {
       await sendEmails(formData);
       
       setStatus("success");
-      setFormData({ name: "", email: "", message: "" }); // Очищення форми
+      setFormData({ name: "", email: "", message: "" }); 
       
-      // Скидаємо статус "Успіх" через 3 секунди, щоб повернути кнопку
       setTimeout(() => setStatus("idle"), 3000);
       
     } catch (error) {
@@ -190,8 +184,7 @@ const ContactPage = () => {
   );
 };
 
-// --- ДОПОМІЖНИЙ КОМПОНЕНТ ---
-// Ми прибрали зайві пропси стилів, бо вони тепер беруться з STYLES напряму
+
 const ContactCard: React.FC<ContactCardProps> = ({ icon, title, text, subText }) => (
     <div className={clsx("p-6 rounded-xl flex items-center gap-6 transition-colors", STYLES.cardBg)}>
         <div className={clsx("w-14 h-14 rounded-full flex items-center justify-center text-xl shrink-0 border border-transparent dark:border-white/5", 
