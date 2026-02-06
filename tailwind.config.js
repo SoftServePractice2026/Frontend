@@ -18,7 +18,7 @@ module.exports = {
         },
 
         secondary: {
-          light: "#00ADB5",
+          light: "#C8102E",
           dark: "#C8102E",
         },
 
@@ -27,6 +27,7 @@ module.exports = {
           light_second: "#dfa3ff",
           dark: "#FFD700",
           dark_second: "#D4AF37",
+          red: "#C8102E",
         },
 
         button: {
