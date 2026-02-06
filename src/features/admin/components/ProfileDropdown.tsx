@@ -1,94 +1,205 @@
-import { Link } from "react-router-dom";
-import adminLogo from "../../../assets/images/logoAdmin.png";
-import { useAuth } from "@/app/providers/AuthProvider";
-import { truncate } from "string-truncate";
+import { useEffect, useState } from "react";
+import clsx from 'clsx';
+import { useNavigate } from "react-router-dom";
+import { api } from "@/shared/api/base.ts";
+import { format } from 'date-fns';
+import { uk } from 'date-fns/locale';
 
-interface ProfileDropdownProps {
-    onClose: () => void;
+interface HallDetailsDto {
+    id: string;
+    name: string;
+    isActive: boolean;
+    hallSize: number;
 }
 
-export const ProfileDropdown = ({ onClose }: ProfileDropdownProps) => {
-    const { user, logout } = useAuth();
+const AdminPage = () => {
+    const navigate = useNavigate();
 
-    const isAdmin = user?.roles?.includes("Admin");
+    const [halls, setHalls] = useState<HallDetailsDto[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+
+    const [activeTab, setActiveTab] = useState<'today' | 'tomorrow'>('today');
+    const [isCalendarOpen, setIsCalendarOpen] = useState(false);
+
+    const [selectedDate, setSelectedDate] = useState<Date>(new Date());
+
+    const formatDateLabel = (date: Date) => {
+        return format(date, 'd MMM, eeee', {locale: uk});
+    }
+
+    const getHallSizeLabel = (size: number) => {
+        const sizes = ["Small", "Medium", "Large"];
+        return sizes[size] || "Unknown";
+    };
+
+    useEffect(() => {
+        const fetchHalls = async () => {
+            try {
+                const dateParam = selectedDate.toISOString().split('T')[0];
+                const response = await api.get(`/halls?date=${dateParam}`);
+                setHalls(response.data);
+            } catch (error) {
+                console.error("Помилка завантаження залів:", error);
+
+                const mockHalls: HallDetailsDto[] = [
+                    {id: "1", name: "Зал A", isActive: true, hallSize: 1},
+                    {id: "2", name: "Зал B", isActive: true, hallSize: 2},
+                    {id: "3", name: "IMAX VIP", isActive: false, hallSize: 0},
+                ]
+                setHalls(mockHalls);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        fetchHalls();
+    }, [selectedDate]);
+
+    if (isLoading) return <div className="text-white p-10 text-center font-light">Отримання даних з бекенду...</div>;
 
     return (
-        <div className="absolute top-full right-0 mt-2 w-[320px] bg-[#1A1A1F] border border-[#2A2A2F] rounded-2xl shadow-2xl z-[100] overflow-hidden font-sans">
-            <div className="p-5 flex items-center gap-4 bg-[#232328]/30">
-                <div className="w-12 h-12 rounded-full overflow-hidden flex items-center justify-center border border-[#E12E2E]/50 shadow-sm bg-[#E12E2E]/5">
-                    <span className="text-white font-bold text-xl">
-                        {user?.firstName?.charAt(0) || "A"}
-                    </span>
-                </div>
-                <div className="flex flex-col">
-                    <span className="text-white text-lg font-semibold tracking-tight leading-tight">
-                        {user ? `${user.firstName} ${user.lastName}` : "Гість"}
-                    </span>
-                    <span className="text-gray-400 text-xs font-light tracking-wider">
-                        {truncate(user?.email || "email@example.com", 25)}
-                    </span>
-                </div>
-            </div>
-
-            <div className="h-[1px] bg-gray-800/50 w-full" />
-
-            <div className="p-1">
-                {isAdmin && (
-                    <Link
-                        to="/admin"
-                        onClick={onClose}
-                        className="w-full flex items-center gap-4 px-5 py-4 text-[#E12E2E] bg-[#E12E2E]/5 hover:bg-[#E12E2E]/10 transition-all rounded-xl group text-left border border-[#E12E2E]/10 mb-1"
+        <div className="max-w-4xl mx-auto relative">
+            <div className="flex items-center gap-10 mb-8 border-b border-gray-800 relative">
+                <div className="relative pb-4">
+                    <button
+                        onClick={() => {
+                            setActiveTab('today');
+                            setSelectedDate(new Date());
+                        }}
+                        className={clsx(
+                            "text-xl font-medium transition-colors",
+                            activeTab === 'today' ? "text-[#E12E2E]" : "text-gray-400 hover:text-white"
+                        )}
                     >
-                        <div className="w-6 h-6 flex items-center justify-center opacity-90 group-hover:scale-110 transition-transform">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="3" y1="9" x2="21" y2="9"/>
-                            </svg>
+                        Сьогодні
+                    </button>
+                    {activeTab === 'today' && (
+                        <div className="absolute bottom-0 left-0 w-full h-[2px] bg-[#E12E2E]"/>
+                    )}
+                </div>
+
+                <div className="relative pb-4">
+                    <button
+                        onClick={() => {
+                            setActiveTab('tomorrow');
+                            const tomorrow = new Date();
+                            tomorrow.setDate(tomorrow.getDate() + 1);
+                            setSelectedDate(tomorrow);
+                        }}
+                        className={clsx(
+                            "text-xl font-medium transition-colors",
+                            activeTab === 'tomorrow' ? "text-[#E12E2E]" : "text-gray-400 hover:text-white"
+                        )}
+                    >
+                        Завтра
+                    </button>
+                    {activeTab === 'tomorrow' && (
+                        <div className="absolute bottom-0 left-0 w-full h-[2px] bg-[#E12E2E]"/>
+                    )}
+                </div>
+
+                <div className="pb-4 ml-2">
+                    <button
+                        onClick={() => setIsCalendarOpen(!isCalendarOpen)}
+                        className={clsx(
+                            "transition-all",
+                            isCalendarOpen ? "text-[#E12E2E]" : "text-white hover:opacity-80"
+                        )}
+                    >
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M19 4H5C3.89543 4 3 4.89543 3 6V20C3 21.1046 3.89543 22 5 22H19C20.1046 22 21 21.1046 21 20V6C21 4.89543 20.1046 4 19 4Z"
+                                stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                            <path d="M16 2V6" stroke="currentColor" strokeWidth="2" strokeLinecap="round"
+                                  strokeLinejoin="round"/>
+                            <path d="M8 2V6" stroke="currentColor" strokeWidth="2" strokeLinecap="round"
+                                  strokeLinejoin="round"/>
+                            <path d="M3 10H21" stroke="currentColor" strokeWidth="2" strokeLinecap="round"
+                                  strokeLinejoin="round"/>
+                        </svg>
+                    </button>
+                </div>
+
+                {isCalendarOpen && (
+                    <div
+                        className="absolute top-full left-[180px] mt-4 z-50 bg-[#1A1A1F] border border-gray-800 rounded-[24px] p-6 shadow-[0_20px_50px_rgba(0,0,0,0.5)] w-[320px] backdrop-blur-md">
+                        <div className="flex justify-between items-center mb-6 px-2 text-white">
+                            <button className="text-gray-500 hover:text-white transition-colors">‹</button>
+                            <span className="font-semibold tracking-wide">Лютий 2026</span>
+                            <button className="text-gray-500 hover:text-white transition-colors">›</button>
                         </div>
-                        <span className="text-base font-bold uppercase tracking-tight">Адмін панель</span>
-                    </Link>
+                        <div className="grid grid-cols-7 mb-4">
+                            {['НД', 'ПН', 'ВТ', 'СР', 'ЧТ', 'ПТ', 'СБ'].map(day => (
+                                <span key={day} className="text-[10px] text-gray-600 font-bold text-center">{day}</span>
+                            ))}
+                        </div>
+                        <div className="grid grid-cols-7 gap-y-1">
+                            {Array.from({length: 28}, (_, i) => i + 1).map(date => {
+                                const isSelected = selectedDate.getDate() === date && selectedDate.getMonth() === 1;
+
+                                return (
+                                    <div key={date} className="flex justify-center items-center">
+                                        <button
+                                            onClick={() => {
+                                                const newDate = new Date(2026, 1, date);
+                                                setSelectedDate(newDate);
+                                                setIsCalendarOpen(false);
+                                                setActiveTab('today');
+                                            }}
+                                            className={clsx(
+                                                "h-9 w-9 rounded-full flex items-center justify-center text-sm transition-all",
+                                                isSelected
+                                                    ? "bg-[#E12E2E] text-white font-bold shadow-[0_0_20px_rgba(225,46,46,0.3)]"
+                                                    : "text-gray-400 hover:bg-white/10"
+                                            )}
+                                        >
+                                            {date}
+                                        </button>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    </div>
                 )}
-
-                <Link
-                    to="/admin/profile"
-                    onClick={onClose}
-                    className="w-full flex items-center gap-4 px-5 py-4 text-gray-300 hover:text-white hover:bg-white/5 transition-all rounded-xl group text-left"
-                >
-                    <div className="w-6 h-6 flex items-center justify-center opacity-70 group-hover:opacity-100 transition-opacity">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
-                        </svg>
-                    </div>
-                    <span className="text-base font-normal">Особистий кабінет</span>
-                </Link>
-
-                <Link
-                    to="/"
-                    onClick={onClose}
-                    className="w-full flex items-center gap-4 px-5 py-4 text-gray-300 hover:text-white hover:bg-white/5 transition-all rounded-xl group text-left"
-                >
-                    <div className="w-6 h-6 flex items-center justify-center opacity-70 group-hover:opacity-100 transition-opacity">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                            <rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="17" x2="22" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/>
-                        </svg>
-                    </div>
-                    <span className="text-base font-normal">Головне меню</span>
-                </Link>
             </div>
 
-            <div className="p-1 border-t border-gray-800/50">
-                <button
-                    onClick={() => {
-                        logout();
-                        onClose();
-                    }}
-                    className="w-full flex items-center gap-4 px-5 py-4 text-[#E12E2E]/80 hover:text-[#E12E2E] hover:bg-[#E12E2E]/5 transition-all rounded-xl group text-left"
-                >
-                    <div className="w-6 h-6 flex items-center justify-center font-bold text-xl group-hover:-translate-x-1 transition-transform text-[#E12E2E]">
-                        ←
+            <div className="mb-6">
+                <h2 className="text-gray-400 text-sm font-light">
+                    {formatDateLabel(selectedDate)}
+                </h2>
+            </div>
+
+            <div className="grid grid-cols-1 gap-4">
+                {halls.map((hall) => (
+                    <div
+                        key={hall.id}
+                        onClick={() => navigate(`/admin/hall/${hall.id}`)}
+                        className="bg-[#1A1A1F] border border-gray-800 hover:border-[#E12E2E]/50 p-6 rounded-[24px] flex justify-between items-center cursor-pointer transition-all duration-300 group shadow-lg"
+                    >
+                        <div className="flex flex-col gap-2">
+                            <div className="flex items-center gap-3">
+                            <span className="text-xl font-bold text-white group-hover:text-[#E12E2E] transition-colors">
+                                {hall.name}
+                            </span>
+                                <span className={clsx(
+                                    "w-2 h-2 rounded-full",
+                                    hall.isActive ? "bg-green-500 animate-pulse" : "bg-gray-600"
+                                )}></span>
+                            </div>
+                            <div className="flex gap-4 text-xs text-gray-500 font-medium">
+                                <span>Тип: {getHallSizeLabel(hall.hallSize)}</span>
+                                <span>•</span>
+                                <span className="text-gray-600">ID: {hall.id.substring(0, 8)}</span>
+                            </div>
+                        </div>
+                        <div
+                            className="bg-[#232328] w-10 h-10 rounded-full flex items-center justify-center text-gray-400 group-hover:bg-[#E12E2E] group-hover:text-white transition-all shadow-inner">
+                            <span className="text-2xl font-light mb-1">›</span>
+                        </div>
                     </div>
-                    <span className="text-base font-medium">Вийти</span>
-                </button>
+                ))}
             </div>
         </div>
     );
 };
+
+export default AdminPage;
