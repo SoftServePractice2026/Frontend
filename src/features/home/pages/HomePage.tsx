@@ -1,10 +1,11 @@
 import Button from "@/shared/ui/Button";
 import clsx from "clsx";
+import { Link } from "react-router-dom";
 
 const HomePage = () => {
 
     const statisticHeaderClassName = clsx(
-        "text-accent-light dark:text-accent-dark font-bebasNeue",
+        "text-accent-red dark:text-accent-dark font-bebasNeue",
         "text-xl sm:text-3xl lg:text-4xl"
     );
     const statisticDescriptionClassName = clsx(
@@ -41,13 +42,14 @@ const HomePage = () => {
                                 "font-montserrat font-bold",
                                 "text-3xl sm:text-5xl lg:text-7xl"
                             )}
-                            >всесвіт</span><br />
+                            >всесвіт</span><br/>
                             <span className={clsx(
                                 "text-secondary-light dark:text-secondary-dark uppercase",
                                 "font-montserrat font-bold",
                                 "text-3xl sm:text-5xl lg:text-7xl"
-                            )}
-                            >кінематографу</span>
+                            )}>
+                              кінематографу
+                            </span>
                         </h1>
                         <p className={clsx(
                             "text-description-light dark:text-description-dark",
@@ -57,12 +59,16 @@ const HomePage = () => {
                         >Ми зібрали актуальну афішу, зручний розклад і швидке бронювання квитків в одному місці. Обирай фільм, знаходь зручний сеанс і насолоджуйся кіно
                         </p>
                     </div>
-                    <Button className={clsx(
-                        "py-4 font-semibold",
-                        "px-4 sm:px-16 lg:px-20",
-                        "mb-8 sm:mb-16"
-                    )}
-                    >Переглянути афішу</Button>
+
+                    <Link to="/afisha">
+                        <Button className={clsx(
+                            "py-4 font-semibold",
+                            "px-4 sm:px-16 lg:px-20",
+                            "mb-8 sm:mb-16"
+                        )}>
+                            Переглянути афішу
+                        </Button>
+                    </Link>
                     <div className={clsx("flex gap-4 sm:gap-12 lg:gap-16")}>
                         <p className={clsx("flex flex-col items-center")}>
                             <span className={statisticHeaderClassName}>10+</span>
