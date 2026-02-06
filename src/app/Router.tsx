@@ -6,6 +6,7 @@ import NotFoundPage from "@/features/home/pages/NotFoundPage";
 import RegistrationPage from "@/features/user/pages/RegistrationPage";
 import LoginPage from "@/features/user/pages/LoginPage";
 import UnauthorizedPage from "@/features/user/pages/UnauthorizedPage";
+import BookingPage from "@/features/booking/pages/BookingPage.tsx";
 import ContactPage from '@/features/contacts/ContactPage'
 import MovieDetailPage from "@/features/movies/pages/MovieDetailPage";
 import AfishaPage from "@/features/poster/pages/AfishaPage";
@@ -23,6 +24,7 @@ export const Router = createBrowserRouter([
                     { path: "/registration", element: <RegistrationPage /> },
                     { path: "/login", element: <LoginPage /> },
                     { path: "/recovery", element: <RegistrationPage /> },
+                    { path: "/booking", element: <BookingPage /> },
                     { path: "/contacts", element : <ContactPage /> },
                     { path: "/movie/:id", element: <MovieDetailPage /> },
                     { path: "/afisha", element: <AfishaPage /> },
