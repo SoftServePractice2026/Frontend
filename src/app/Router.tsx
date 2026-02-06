@@ -17,6 +17,7 @@ import ContactPage from '@/features/contacts/ContactPage'
 import MovieDetailPage from "@/features/movies/pages/MovieDetailPage";
 import AfishaPage from "@/features/poster/pages/AfishaPage";
 import ComingSoonPage from "@/features/upcoming/pages/ComingSoonPage";
+import { ProtectedRoute } from "./ProtectedRoute";
 
 export const Router = createBrowserRouter([
     {
