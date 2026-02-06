@@ -1,26 +1,30 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import Button from "../ui/Button";
 import clsx from "clsx";
 import Logo from "@/assets/svg/components/Logo";
 import { useAuth } from "@/app/providers/AuthProvider";
 import Avatar from "@/assets/svg/components/Avatar";
 import { truncate } from "string-truncate";
-// Імпортуємо твій випадаючий список
 import { ProfileDropdown } from "@/features/admin/components/ProfileDropdown";
+import { UserMenu } from "@/features/menu/components/UserMenu";
+
 
 const Header = () => {
     const navigate = useNavigate();
+    const location = useLocation();
     const { isAuth, user, logout } = useAuth();
 
     const [isProfileOpen, setIsProfileOpen] = useState(false);
 
-    const linkClassName = clsx(
+    const linkClassName = (path: string) => clsx(
         "flex items-center",
-        "text-primary-light dark:text-primary-dark",
-        "hover:text-secondary-light dark:hover:text-secondary-dark",
         "font-montserrat font-medium text-base leading-none text-center",
-        "transition"
+        "transition",
+        location.pathname === path
+            ? "text-red-500 dark:text-secondary-dark"
+            : "text-primary-light dark:text-primary-dark hover:text-red-500 dark:hover:text-secondary-dark"
+
     );
 
     return (
@@ -45,11 +49,14 @@ const Header = () => {
                 </div>
 
                 {/* { Nav List} */}
-                <nav className="hidden lg:flex lg:gap-4 xl:gap-8">
-                    <Link to={"/"} className={linkClassName}>Афіша</Link>
-                    <Link to={"/"} className={linkClassName}>Скоро у кіно</Link>
-                    <Link to={"/"} className={linkClassName}>Про нас</Link>
-                    <Link to={"/"} className={linkClassName}>Допомога і контакти</Link>
+                <nav className={clsx(
+                    "hidden lg:flex",
+                    "lg:gap-4 xl:gap-8",
+                )}>
+                    <Link to="/afisha" className={linkClassName("/afisha")}>Афіша</Link>
+                    <Link to="/coming-soon" className={linkClassName("/coming-soon")}>Скоро у кіно</Link>
+                    <Link to="/" className={linkClassName("/")}>Про нас</Link>
+                    <Link to="/contacts" className={linkClassName("/contacts")}>Допомога і контакти</Link>
                 </nav>
 
                 {/* { Options } */}
@@ -90,6 +97,7 @@ const Header = () => {
                             )}
                         </div>
                     )}
+                    <UserMenu/>
                 </div>
             </div>
         </header>
