@@ -5,7 +5,6 @@ import HomePage from "@/features/home/pages/HomePage";
 import NotFoundPage from "@/features/home/pages/NotFoundPage";
 import RegistrationPage from "@/features/user/pages/RegistrationPage";
 import LoginPage from "@/features/user/pages/LoginPage";
-import { ProtectedRoute } from "./ProtectedRoute";
 import UnauthorizedPage from "@/features/user/pages/UnauthorizedPage";
 import MovieDetailPage from "@/features/movies/pages/MovieDetailPage";
 

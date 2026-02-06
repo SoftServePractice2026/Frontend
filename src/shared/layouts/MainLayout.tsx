@@ -1,6 +1,5 @@
 import { Outlet } from "react-router-dom";
 import Header from "./Header";
-import clsx from "clsx";
 
 const MainLayout = () => {
     return (
