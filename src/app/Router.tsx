@@ -38,7 +38,11 @@ export const Router = createBrowserRouter([
             },
             {
                 path: "/admin",
-                element: <AdminLayout/>,
+                element: (
+                    <ProtectedRoute requiredRoles={["Admin"]}>
+                         <AdminLayout/>
+                    </ProtectedRoute>
+                ),
                 children: [
                     { path: "", element: <AdminPage/> },
                     { path: "hall/:id", element: <HallSessionPage/>},

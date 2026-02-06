@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import clsx from 'clsx';
 import { useNavigate } from "react-router-dom";
-import { api } from "@/shared/api/base.ts"; // Переконайся, що шлях правильний
+import { api } from "@/shared/api/base.ts";
 
 interface HallDetailsDto {
     id: string;
