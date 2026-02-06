@@ -5,9 +5,10 @@ import HomePage from "@/features/home/pages/HomePage";
 import NotFoundPage from "@/features/home/pages/NotFoundPage";
 import RegistrationPage from "@/features/user/pages/RegistrationPage";
 import LoginPage from "@/features/user/pages/LoginPage";
-import { ProtectedRoute } from "./ProtectedRoute";
 import UnauthorizedPage from "@/features/user/pages/UnauthorizedPage";
 import ContactPage from '@/features/contacts/ContactPage'
+import MovieDetailPage from "@/features/movies/pages/MovieDetailPage";
+
 export const Router = createBrowserRouter([
     {
         element: <App />,
@@ -21,6 +22,8 @@ export const Router = createBrowserRouter([
                     { path: "/login", element: <LoginPage /> },
                     { path: "/recovery", element: <RegistrationPage /> },
                     { path: "/contacts", element : <ContactPage /> },
+                    { path: "/movie/:id", element: <MovieDetailPage /> },
+
                     // User path example
                     // { path: "...", element: (<ProtectedRoute requiredRoles={["User, Admin"]}>...</ProtectedRoute>)}
 
