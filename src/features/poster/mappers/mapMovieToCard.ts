@@ -11,5 +11,6 @@ export function mapMovieToCard(m: MovieListItemDto): MovieCardVm {
         ageBadge: m.ageRating ? `${m.ageRating}+` : undefined,
         rating: m.rating ?? undefined,
         meta: m.duration ? `${m.duration} хв` : undefined,
+        rentalStart: m.rentalStart,
     };
 }
