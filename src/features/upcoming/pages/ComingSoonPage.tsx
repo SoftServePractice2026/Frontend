@@ -1,14 +1,12 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useCallback } from "react";
 import clsx from "clsx";
 import { MovieCard } from "@/features/poster/components/MovieCard";
 import { SearchBar } from "@/features/poster/components/SearchBar";
 import { FiltersPanel } from "@/features/poster/components/FiltersPanel";
 import { getMovies, type MovieListItemDto } from "@/features/poster/api/moviesApi";
 import { mapMovieToCard } from "@/features/poster/mappers/mapMovieToCard";
+import { getGenres, type GenreDto } from "@/features/poster/types/genresApi";
 
-
-const GENRES = [
-    "Всі", "Екшн", "Комедія", "Драма", "Фантастика", "Анімація", "Пригоди", "Біографія", "Історія", "Фентезі"];
 
 type UiDate = { d: string; day: string; w: string; isToday: boolean };
 
@@ -25,8 +23,7 @@ const addDays = (d: Date, days: number) => {
 const generateDates = (base = new Date()): UiDate[] => {
     const ukrainianDays = ["нд", "пн", "вт", "ср", "чт", "пт", "сб"];
     const dates: UiDate[] = [];
-    const start = addDays(new Date(base.getFullYear(), base.getMonth(), base.getDate()), 6);
-
+    const start = addDays(base, 6);
     for (let i = 0; i < 7; i++) {
         const date = addDays(start, i);
         dates.push({
@@ -39,89 +36,116 @@ const generateDates = (base = new Date()): UiDate[] => {
     return dates;
 };
 
-
 export default function ComingSoonPage() {
     const [query, setQuery] = useState("");
     const [isFiltersOpen, setIsFiltersOpen] = useState(false);
-    const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
+    const [selectedGenreIds, setSelectedGenreIds] = useState<string[]>([]);
     const [selectedDate, setSelectedDate] = useState<string | null>(null);
-
+    const [genresFromApi, setGenresFromApi] = useState<GenreDto[]>([]);
     const [apiMovies, setApiMovies] = useState<MovieListItemDto[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [loadError, setLoadError] = useState<string | null>(null);
     const dates = useMemo(() => generateDates(), []);
-    useEffect(() => {
-        if (selectedDate == null) setSelectedDate(dates[0]?.d ?? null);
-    }, [dates]);
 
     useEffect(() => {
-        let active = true;
-        const load = async () => {
+        if (selectedDate === null && dates[0]?.d) {
+            setSelectedDate(dates[0].d);
+        }
+    }, [dates, selectedDate]);
+
+    useEffect(() => {
+        let mounted = true;
+
+        (async () => {
+            try {
+                const data = await getGenres();
+                if (!mounted) return;
+                setGenresFromApi(data);
+            } catch (e) {
+                console.error("genres load error", e);
+            }
+        })();
+
+        return () => {
+            mounted = false;
+        };
+    }, []);
+
+
+    useEffect(() => {
+        let mounted = true;
+
+        (async () => {
             try {
                 setIsLoading(true);
                 setLoadError(null);
 
-                const q = query.trim();
                 const data = await getMovies({
                     pageNumber: 1,
                     pageSize: 29,
-                    searchQuery: q ? q : undefined,
+                    searchQuery: query.trim() ? query.trim() : undefined,
                 });
-                if (!active) return;
+
+                if (!mounted) return;
                 setApiMovies(data);
-            } catch {
-                if (!active) return;
-                setLoadError("Could not load coming soon page");
+            } catch (e) {
+                console.error("movies load error", e);
+                if (!mounted) return;
+                setLoadError("Не вдалося завантажити афішу");
             } finally {
-                if (active) setIsLoading(false);
+                if (mounted) setIsLoading(false);
             }
-        };
-        load();
+        })();
+
         return () => {
-            active = false;
+            mounted = false;
         };
     }, [query]);
 
-    const handleGenreSelect = (genre: string) => {
-        if (genre === "Всі") {
-            setSelectedGenres([]);
-            return;
-        }
-        setSelectedGenres((prev) =>
-            prev.includes(genre) ? prev.filter((g) => g !== genre) : [...prev, genre]
-        );
-    };
+
+    const handleGenreToggle = useCallback((id: string) => {
+        setSelectedGenreIds((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
+    }, []);
+
+    const handleClearGenres = useCallback(() => {
+        setSelectedGenreIds([]);
+    }, []);
 
     const movies = useMemo(() => {
         const q = query.trim().toLowerCase();
-        const now = new Date();
-        const today0 = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-        const fallbackTargetIso = toLocalYmd(addDays(today0, 6));
-        const targetIso = selectedDate ?? fallbackTargetIso;
-        console.log("targetIso:", targetIso);
-        console.log("rentalStarts:", apiMovies.map(m => m.rentalStart?.slice(0, 10)));
-        return apiMovies
+        const targetIso = selectedDate ?? dates[0]?.d;
 
+        if (!targetIso) return [];
+
+        console.log("Обрана дата для фільтрації:", targetIso);
+        console.log("Доступні дати початку прокату:", apiMovies.map(m => m.rentalStart?.slice(0, 10)));
+
+        return apiMovies
             .filter((m) => {
                 const matchesQuery = !q || (m.title ?? "").toLowerCase().includes(q);
-                const rsIso = m.rentalStart?.slice(0, 10);
-                if (!rsIso) return false;
+                const rentalStartDate = m.rentalStart?.slice(0, 10);
+                if (!rentalStartDate) return false;
+                const movieStartDate = new Date(rentalStartDate + "T00:00:00");
 
-                const now = new Date();
-                const today0 = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-                const from = addDays(today0, 6).getTime();
-                const t = new Date(rsIso + "T00:00:00").getTime();
-                const matchesComingSoon = t >= from;
-                return matchesQuery && matchesComingSoon;
+                if (selectedDate) {
+                    return matchesQuery && rentalStartDate === selectedDate;
+                }
+
+                const today = new Date();
+                const sixDaysFromNow = addDays(today, 6);
+                sixDaysFromNow.setHours(0, 0, 0, 0);
+
+                return matchesQuery && movieStartDate >= sixDaysFromNow;
             })
-            .map(mapMovieToCard)
-            .filter((vm) => {
-                if (selectedGenres.length === 0) return true;
-                return selectedGenres.some((g) =>
-                    (vm.meta ?? "").toLowerCase().includes(g.toLowerCase())
+            .filter((m) => {
+                if (selectedGenreIds.length === 0) return true;
+
+                return (m.genreIds ?? []).some((id) =>
+                    selectedGenreIds.includes(String(id))
                 );
-            });
-    }, [apiMovies, query, selectedGenres, selectedDate]);
+            })
+            .map(mapMovieToCard);
+    }, [apiMovies, query, selectedGenreIds, selectedDate, dates]);
 
     return (
         <div className={clsx("h-full overflow-y-auto")}>
@@ -135,9 +159,10 @@ export default function ComingSoonPage() {
 
                 {isFiltersOpen && (
                     <FiltersPanel
-                        genres={GENRES}
-                        selectedGenres={selectedGenres}
-                        onGenreSelect={handleGenreSelect}
+                        genres={genresFromApi}
+                        selectedGenreIds={selectedGenreIds}
+                        onGenreToggle={handleGenreToggle}
+                        onClearGenres={handleClearGenres}
                         dates={dates}
                         selectedDate={selectedDate}
                         setSelectedDate={setSelectedDate}
@@ -149,7 +174,10 @@ export default function ComingSoonPage() {
 
                 {!isLoading && !loadError && movies.length === 0 ? (
                     <div className="py-6 text-sm text-black/60 dark:text-white/70">
-                        Немає фільмів, що стартують через 6 днів або на обрану дату
+                        {selectedDate
+                            ? `Немає фільмів, що стартують ${selectedDate}`
+                            : "Немає фільмів, що стартують через 6 днів"
+                        }
                     </div>
                 ) : null}
 
