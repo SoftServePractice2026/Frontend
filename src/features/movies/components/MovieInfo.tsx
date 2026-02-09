@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import type { Movie } from "../types";
+import type { MovieDetailsDto } from "../types";
 
 const StarIcon = () => (
   <svg width="18" height="18" viewBox="0 0 24 24" fill="#D4AF37" stroke="none">
@@ -57,13 +57,13 @@ const HeartIcon = ({ filled }: { filled: boolean }) => (
 );
 
 interface MovieInfoProps {
-  movie: Movie;
+  movie: MovieDetailsDto;
   isFavorite: boolean;
   onToggleFavorite: () => void;
 }
 
 const MovieInfo = ({ movie, isFavorite, onToggleFavorite }: MovieInfoProps) => {
-  const endDateFormatted = new Date(movie.endDate).toLocaleDateString("uk-UA", {
+  const rentalStartFormatted = new Date(movie.rentalStartDate).toLocaleDateString("uk-UA", {
     day: "numeric",
     month: "long",
     year: "numeric",
@@ -87,9 +87,6 @@ const MovieInfo = ({ movie, isFavorite, onToggleFavorite }: MovieInfoProps) => {
             >
               {movie.title}
             </h1>
-            <p className="text-description-light dark:text-description-dark text-base mt-1.5 font-montserrat">
-              {movie.originalTitle}
-            </p>
           </div>
 
           <button
@@ -128,7 +125,7 @@ const MovieInfo = ({ movie, isFavorite, onToggleFavorite }: MovieInfoProps) => {
               "text-primary-light dark:text-primary-dark",
             )}
           >
-            {movie.ageRestriction}
+            {movie.ageRating}+
           </span>
 
           <div className="flex items-center gap-1.5 text-description-light dark:text-description-dark">
@@ -147,7 +144,7 @@ const MovieInfo = ({ movie, isFavorite, onToggleFavorite }: MovieInfoProps) => {
         </div>
 
         <div className="flex gap-2.5 mb-8 flex-wrap">
-          {movie.genre.map((g) => (
+          {movie.genres.map((g) => (
             <span
               key={g}
               className={clsx(
@@ -199,7 +196,7 @@ const MovieInfo = ({ movie, isFavorite, onToggleFavorite }: MovieInfoProps) => {
             "text-[13px] font-medium font-montserrat",
           )}
         >
-          <CalendarIcon />У прокаті до {endDateFormatted} р.
+          <CalendarIcon />У прокаті з {rentalStartFormatted}
         </div>
       </div>
     </div>

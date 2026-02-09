@@ -1,71 +1,10 @@
-import type { Movie, Session } from "../types";
+import type { Session } from "../types";
 
-export const MOCK_MOVIES: Movie[] = [
-  {
-    id: 1,
-    title: "Дюна: Частина друга",
-    originalTitle: "Dune: Part Two",
-    rating: 8.13,
-    genre: ["Фантастика", "Пригоди", "Екшн"],
-    ageRestriction: "16+",
-    year: 2024,
-    duration: 166,
-    endDate: "2026-02-15",
-    description:
-      "«Дюна: Частина друга» продовжує історію Пола Атріда, який після знищення його родини об'єднується з фременами на пустельній планеті Арракіс, опановує їхні звичаї та готується помститися заколотникам.",
-    actors: [
-      "Тімоті Шаламе",
-      "Зендея",
-      "Флоренс П'ю",
-      "Остін Батлер",
-      "Леа Сейду",
-    ],
-    poster: "https://image.tmdb.org/t/p/w500/6izwz7rsy95ARzTR3poZ8H6c5pp.jpg",
-    formats: ["2D", "IMAX", "4DX"],
-  },
-  {
-    id: 2,
-    title: "Опенгеймер",
-    originalTitle: "Oppenheimer",
-    rating: 8.0,
-    genre: ["Біографія", "Драма", "Історія"],
-    ageRestriction: "16+",
-    year: 2023,
-    duration: 180,
-    endDate: "2026-03-30",
-    description:
-      "Історія американського вченого Роберта Оппенгеймера та його ролі у розробці атомної бомби під час Другої світової війни.",
-    actors: [
-      "Кілліан Мерфі",
-      "Емілі Блант",
-      "Метт Деймон",
-      "Роберт Дауні-мол.",
-    ],
-    poster: "https://image.tmdb.org/t/p/w500/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg",
-    formats: ["2D", "IMAX"],
-  },
-  {
-    id: 3,
-    title: "Кунг-фу Панда 4",
-    originalTitle: "Kung Fu Panda 4",
-    rating: 7.0,
-    genre: ["Анімація", "Комедія", "Пригоди"],
-    ageRestriction: "0+",
-    year: 2024,
-    duration: 94,
-    endDate: "2026-05-10",
-    description:
-      "По повинен знайти та навчити нового Воїна Дракона, бо сам стає духовним лідером Долини Спокою.",
-    actors: ["Джек Блек", "Аквафіна", "Віола Девіс"],
-    poster: "https://image.tmdb.org/t/p/w500/kDp1vUBnMpe8ak4rjgl3cLELqjU.jpg",
-    formats: ["2D", "3D"],
-  },
-];
-
+// TODO: Replace with sessions API
 export const MOCK_SESSIONS: Session[] = [
   {
     id: 1,
-    movieId: 1,
+    movieId: "1",
     time: "10:00",
     format: "2D",
     hall: 1,
@@ -74,7 +13,7 @@ export const MOCK_SESSIONS: Session[] = [
   },
   {
     id: 2,
-    movieId: 1,
+    movieId: "1",
     time: "17:00",
     format: "IMAX",
     hall: 3,
@@ -83,7 +22,7 @@ export const MOCK_SESSIONS: Session[] = [
   },
   {
     id: 3,
-    movieId: 1,
+    movieId: "1",
     time: "19:30",
     format: "4DX",
     hall: 4,
@@ -92,7 +31,7 @@ export const MOCK_SESSIONS: Session[] = [
   },
   {
     id: 4,
-    movieId: 1,
+    movieId: "1",
     time: "21:45",
     format: "2D",
     hall: 2,
@@ -101,7 +40,7 @@ export const MOCK_SESSIONS: Session[] = [
   },
   {
     id: 5,
-    movieId: 2,
+    movieId: "2",
     time: "14:00",
     format: "IMAX",
     hall: 3,
@@ -110,7 +49,7 @@ export const MOCK_SESSIONS: Session[] = [
   },
   {
     id: 6,
-    movieId: 2,
+    movieId: "2",
     time: "18:30",
     format: "2D",
     hall: 1,
@@ -119,7 +58,7 @@ export const MOCK_SESSIONS: Session[] = [
   },
   {
     id: 7,
-    movieId: 3,
+    movieId: "3",
     time: "11:00",
     format: "2D",
     hall: 1,
@@ -128,7 +67,7 @@ export const MOCK_SESSIONS: Session[] = [
   },
   {
     id: 8,
-    movieId: 3,
+    movieId: "3",
     time: "15:00",
     format: "3D",
     hall: 2,
