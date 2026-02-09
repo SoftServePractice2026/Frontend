@@ -1,4 +1,5 @@
 import clsx from "clsx";
+import { useNavigate } from "react-router-dom";
 
 export type MovieCardProps = {
     id: string;
@@ -10,15 +11,17 @@ export type MovieCardProps = {
 };
 
 export const MovieCard = ({
+                              id,
                               title,
                               posterUrl,
                               ageBadge,
                               rating,
                               meta,
                           }: MovieCardProps) => {
+    const navigate = useNavigate();
 
     return (
-        <div className="group">
+        <div className="group cursor-pointer" onClick={() => navigate(`/movie/${id}`)}>
             <div
                 className={clsx(
                     "relative overflow-hidden aspect-[2/3]",
