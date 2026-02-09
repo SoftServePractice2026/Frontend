@@ -36,6 +36,7 @@ export const Router = createBrowserRouter([
                     { path: "/movie/:id", element: <MovieDetailPage /> },
                     { path: "/afisha", element: <AfishaPage /> },
                     { path: "/coming-soon", element: <ComingSoonPage /> },
+                    { path: "/profile", element: <ProfilePage /> },
 
                     // User path example
                     // { path: "...", element: (<ProtectedRoute requiredRoles={["User, Admin"]}>...</ProtectedRoute>)}
@@ -58,7 +59,6 @@ export const Router = createBrowserRouter([
                     { path: "hall/:id", element: <HallSessionPage/>},
                     { path: "session/:sessionId", element: <SessionDetailsPage/> },
                     { path: "session/:sessionId/seat/:seatId", element: <SeatDetailsPage /> },
-                    { path: "profile", element: <ProfilePage /> }
                 ]
             }
         ]

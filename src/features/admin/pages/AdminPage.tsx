@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import clsx from 'clsx';
 import { useNavigate } from "react-router-dom";
-import { api } from "@/shared/api/base.ts";
+import { api } from "@/shared/api/Axios";
 
 interface HallDetailsDto {
     id: string;
@@ -27,7 +27,7 @@ const AdminPage = () => {
     useEffect(() => {
         const fetchHalls = async () => {
             try {
-                const response = await api.get("/halls");
+                const response = await api.get("/v1/halls");
                 setHalls(response.data);
             } catch (error) {
                 console.error("Помилка завантаження залів:", error);

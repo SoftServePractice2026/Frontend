@@ -1,4 +1,4 @@
-import { api } from "../base";
+import { api } from "../Axios";
 
 export const SessionService = {
     getById: async (sessionId: string)=> {

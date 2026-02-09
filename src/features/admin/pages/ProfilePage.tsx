@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { api } from "@/shared/api/base.ts";
+import { api } from "@/shared/api/Axios";
 import {useAuth} from "@/app/providers/AuthProvider.tsx";
 
 interface IdentityDetailsDto {

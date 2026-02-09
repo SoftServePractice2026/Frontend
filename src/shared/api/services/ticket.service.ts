@@ -1,4 +1,4 @@
-import {api} from "@/shared/api/base.ts";
+import {api} from "@/shared/api/Axios";
 
 export const TicketService = {
     getBySeat: async (sessionId: string, seatId: string) => {
