@@ -6,8 +6,8 @@ import Logo from "@/assets/svg/components/Logo";
 import { useAuth } from "@/app/providers/AuthProvider";
 import Avatar from "@/assets/svg/components/Avatar";
 import { truncate } from "string-truncate";
-import { ProfileDropdown } from "@/features/admin/components/ProfileDropdown";
 import { UserMenu } from "@/features/menu/components/UserMenu";
+import { ProfileDropdown } from "@/features/admin/components/ProfileDropdown.tsx";
 
 
 const Header = () => {

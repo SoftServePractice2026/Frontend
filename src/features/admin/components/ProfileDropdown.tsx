@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
-import adminLogo from "../../../assets/images/logoAdmin.png";
 import { useAuth } from "@/app/providers/AuthProvider";
 import { truncate } from "string-truncate";
+import adminLogo from "../../../assets/images/logoAdmin.png";
 
 interface ProfileDropdownProps {
     onClose: () => void;
@@ -9,15 +9,14 @@ interface ProfileDropdownProps {
 
 export const ProfileDropdown = ({ onClose }: ProfileDropdownProps) => {
     const { user, logout } = useAuth();
-
     const isAdmin = user?.roles?.includes("Admin");
 
     return (
         <div className="absolute top-full right-0 mt-2 w-[320px] bg-[#1A1A1F] border border-[#2A2A2F] rounded-2xl shadow-2xl z-[100] overflow-hidden font-sans">
             <div className="p-5 flex items-center gap-4 bg-[#232328]/30">
-                <div className="w-12 h-12 rounded-full overflow-hidden flex items-center justify-center border border-[#E12E2E]/50 shadow-sm bg-[#E12E2E]/5">
-                    <span className="text-white font-bold text-xl">
-                        {user?.firstName?.charAt(0) || "A"}
+                <div className="w-12 h-12 rounded-full overflow-hidden flex items-center justify-center border border-[#E12E2E]/50 bg-[#E12E2E]/5">
+                    <span className="text-white font-bold text-xl uppercase">
+                        {user?.firstName?.charAt(0) || "U"}
                     </span>
                 </div>
                 <div className="flex flex-col">
@@ -25,7 +24,7 @@ export const ProfileDropdown = ({ onClose }: ProfileDropdownProps) => {
                         {user ? `${user.firstName} ${user.lastName}` : "Гість"}
                     </span>
                     <span className="text-gray-400 text-xs font-light tracking-wider">
-                        {truncate(user?.email || "email@example.com", 25)}
+                        {truncate(user?.email || "email@cinema.com", 25)}
                     </span>
                 </div>
             </div>
@@ -78,7 +77,7 @@ export const ProfileDropdown = ({ onClose }: ProfileDropdownProps) => {
             <div className="p-1 border-t border-gray-800/50">
                 <button
                     onClick={() => {
-                        logout();
+                        logout(); // Очищаємо токени при виході
                         onClose();
                     }}
                     className="w-full flex items-center gap-4 px-5 py-4 text-[#E12E2E]/80 hover:text-[#E12E2E] hover:bg-[#E12E2E]/5 transition-all rounded-xl group text-left"
