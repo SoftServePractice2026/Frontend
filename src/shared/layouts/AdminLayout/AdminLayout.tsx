@@ -4,6 +4,7 @@ import clsx from "clsx";
 import { ProfileDropdown } from "@/features/admin/components/ProfileDropdown.tsx";
 import { useAuth } from "@/app/providers/AuthProvider";
 import adminLogo from "../../../assets/images/logoAdmin.png";
+import Logo from "@/assets/svg/components/Logo";
 
 const AdminLayout = () => {
     const { pathname } = useLocation();
@@ -30,16 +31,16 @@ const AdminLayout = () => {
         <div className="flex flex-col min-h-screen bg-[#0A0A0F] text-white font-sans">
             <header className="h-20 border-b border-gray-800 flex items-center justify-between px-8 bg-[#0A0A0F] z-[60] sticky top-0">
 
-                <Link to="/" className="flex items-center gap-3 group transition-opacity hover:opacity-90">
-                    <div className="bg-[#E12E2E] p-1.5 rounded-md flex items-center justify-center transition-transform group-hover:scale-105">
-                        <svg width="24" height="20" viewBox="0 0 24 20" fill="white">
-                            <path d="M22 0H2V4H4V2H20V4H22V0ZM2 6H0V20H24V6H22V8H20V6H4V8H2V6ZM22 18H2V10H22V18Z" />
-                        </svg>
-                    </div>
-                    <span className="text-2xl font-bold tracking-tighter uppercase font-bebasNeue">
-                        CINE<span className="border border-white px-1 ml-0.5">VERSE</span>
-                    </span>
-                </Link>
+                <div className="">
+                    <Link to={"/"} className="flex items-center group">
+                        <Logo className={clsx(
+                            "text-secondary-light dark:text-secondary-dark",
+                            "mr-1 sm:mr-3 w-12 h-12 transition-transform group-hover:scale-110"
+                        )} />
+                        <p className="text-primary-light dark:text-primary-dark font-bebasNeue font-normal uppercase tracking-[-0.6px] text-4xl">cine</p>
+                        <p className="text-secondary-light dark:text-secondary-dark font-bebasNeue font-normal uppercase tracking-[-0.6px] text-4xl">verse</p>
+                    </Link>
+                </div>
 
                 <div className="relative">
                     <div

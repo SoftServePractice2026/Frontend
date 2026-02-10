@@ -1,62 +1,135 @@
-import type { AuthResponse, IdentityDetailsDto, LoginRequest } from "@/features/user/types";
-import { api } from "@/shared/api/Axios";
-import { createContext, useContext, useEffect, useState } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+import type {
+  AuthResponse,
+  IdentityDetailsDto,
+  LoginRequest,
+} from "@/features/user/types";
+import { api, refreshClient, setAccessToken, setRefreshHandler } from "@/shared/api/Axios";
 
 interface AuthContextType {
   isAuth: boolean;
   user: IdentityDetailsDto | null;
   login: (request: LoginRequest) => Promise<void>;
-  logout: () => void;
-  updateUserInfo: (newData: Partial<IdentityDetailsDto>) => void;
+  logout: () => Promise<void>;
   isLoading: boolean;
 }
 
 const AuthContext = createContext<AuthContextType>(null!);
 
-export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
+export const AuthProvider = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
   const [isAuth, setIsAuth] = useState(false);
   const [user, setUser] = useState<IdentityDetailsDto | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
+  const refreshTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const refreshPromise = useRef<Promise<string> | null>(null);
+
+  // Refresh access token
+  const refreshAccessToken = async (): Promise<string> => {
+    if (refreshPromise.current) {
+      return refreshPromise.current; // 👈 якщо вже йде refresh — чекаємо його
+    }
+
+    refreshPromise.current = (async () => {
+      try {
+        const { data } = await refreshClient.post<AuthResponse>("/v1/refresh");
+
+        setAccessToken(data.token);
+        scheduleTokenRefresh(data.expiryDate);
+
+        return data.token;
+      } finally {
+        refreshPromise.current = null; // 🔥 скидаємо lock
+      }
+    })();
+
+    return refreshPromise.current;
+  };
+
+  // Планування refresh
+  const scheduleTokenRefresh = (expiryDate: string) => {
+    const expiresAt = new Date(expiryDate).getTime();
+    const now = Date.now();
+
+    const refreshTime = expiresAt - now - 30_000; // за 30 сек до expire
+
+    if (refreshTimeout.current) {
+      clearTimeout(refreshTimeout.current);
+    }
+
+    if (refreshTime > 0) {
+      refreshTimeout.current = setTimeout(async () => {
+        try {
+          await refreshAccessToken();
+        } catch {
+          await logout();
+        }
+      }, refreshTime);
+    }
+  };
+
   const login = async (request: LoginRequest) => {
     const { data } = await api.post<AuthResponse>("/v1/login", request);
-    localStorage.setItem("token", data.token);
 
-    const me = await api.get<IdentityDetailsDto>("/v1/me");
-    setUser(me.data);
+    setAccessToken(data.token);
+    scheduleTokenRefresh(data.expiryDate);
+
+    setUser(data.userDetails);
     setIsAuth(true);
   };
 
-  const logout = () => {
-    localStorage.removeItem("token");
+  const logout = async () => {
+    if (refreshTimeout.current) {
+      clearTimeout(refreshTimeout.current);
+    }
+
+    setAccessToken(null);
+
+    try {
+      await api.post("/v1/logout");
+    } catch { }
+
     setUser(null);
     setIsAuth(false);
   };
 
-  const updateUserInfo = (newData: Partial<IdentityDetailsDto>) => {
-    setUser(prev => prev ? {...prev, ...newData} : null);
-  };
-
+  //При першому завантаженні
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    setRefreshHandler(refreshAccessToken);
 
-    if (!token){
-      setIsLoading(false);
-      return;
-    }
-    api.get<IdentityDetailsDto>("/v1/me")
-        .then(res => {
-          setUser(res.data);
-          setIsAuth(true);
-        })
-        .catch(() => {
-          logout();
-        })
-        .finally(() => setIsLoading(false));
+    const initAuth = async () => {
+      try {
+        // пробуємо одразу refresh
+        const token = await refreshAccessToken();
+
+        setAccessToken(token);
+
+        const me = await api.get<IdentityDetailsDto>("/v1/me");
+
+        setUser(me.data);
+        setIsAuth(true);
+      } catch {
+        setIsAuth(false);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    initAuth();
   }, []);
 
   return (
-    <AuthContext.Provider value={{ isAuth, user, login, logout, isLoading, updateUserInfo }}>
+    <AuthContext.Provider value={{ isAuth, user, login, logout, isLoading }}>
       {!isLoading && children}
     </AuthContext.Provider>
   );

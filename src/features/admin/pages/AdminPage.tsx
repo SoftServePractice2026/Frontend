@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import clsx from 'clsx';
 import { useNavigate } from "react-router-dom";
-import { api } from "@/shared/api/base.ts";
+import { api } from "@/shared/api/Axios";
 import { format, addDays, startOfToday } from 'date-fns';
 import { uk } from 'date-fns/locale'; // Для української мови
 
@@ -33,7 +33,7 @@ const AdminPage = () => {
             setIsLoading(true);
             try {
                 const dateParam = format(selectedDate, 'yyyy-MM-dd');
-                const response = await api.get(`/halls?date=${dateParam}`);
+                const response = await api.get(`/v1/halls?date=${dateParam}`);
                 setHalls(response.data);
             } catch (error) {
                 console.error("Помилка завантаження залів:", error);

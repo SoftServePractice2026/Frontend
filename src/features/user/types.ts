@@ -22,6 +22,7 @@ export interface IdentityDetailsDto {
 
 export interface AuthResponse {
     token: string;
-    expiryDate: Date;
-    UserDetails: IdentityDetailsDto;
+    expiryDate: string;
+    userDetails: IdentityDetailsDto;
+    refreshToken: string | null;
 }

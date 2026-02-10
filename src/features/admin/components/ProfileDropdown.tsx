@@ -48,7 +48,7 @@ export const ProfileDropdown = ({ onClose }: ProfileDropdownProps) => {
                 )}
 
                 <Link
-                    to="/admin/profile"
+                    to="/profile"
                     onClick={onClose}
                     className="w-full flex items-center gap-4 px-5 py-4 text-gray-300 hover:text-white hover:bg-white/5 transition-all rounded-xl group text-left"
                 >
