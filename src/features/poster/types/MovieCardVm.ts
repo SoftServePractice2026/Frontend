@@ -5,4 +5,5 @@ export type MovieCardVm = {
     ageBadge?: string;
     rating?: number;
     meta?: string;
+    rentalStart?: string;
 };

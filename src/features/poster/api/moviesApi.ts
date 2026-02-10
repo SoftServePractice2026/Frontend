@@ -8,6 +8,8 @@ export type MovieListItemDto = {
     ageRating: number;
     rating: number;
     genreIds: string[];
+    rentalStart?: string;
+    rentalEnd?: string;
 };
 
 export type MoviesQuery = {
