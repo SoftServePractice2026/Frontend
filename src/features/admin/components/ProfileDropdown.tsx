@@ -86,7 +86,24 @@ export const ProfileDropdown = ({ onClose }: ProfileDropdownProps) => {
                         </svg>
                     </div>
                     <span className="text-base font-normal">Головне меню</span>
+
                 </Link>
+
+                <Link
+                    to="/favorites"
+                    onClick={onClose}
+                    className="w-full flex items-center gap-4 px-5 py-4 text-gray-300 hover:text-white hover:bg-white/5 transition-all rounded-xl group text-left"
+                >
+                    <div
+                        className="w-6 h-6 flex items-center justify-center opacity-70 group-hover:opacity-100 transition-opacity">
+                        <svg className="w-5 h-5 opacity-90" viewBox="0 0 24 24" aria-hidden="true">
+                            <image href="/heart.svg" width="24" height="24"/>
+                        </svg>
+                    </div>
+                    <span className="text-base font-normal">Обране</span>
+                </Link>
+
+
             </div>
 
             <div className="p-1 border-t border-gray-800/50">
