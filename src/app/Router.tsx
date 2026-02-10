@@ -17,6 +17,7 @@ import ContactPage from '@/features/contacts/ContactPage'
 import MovieDetailPage from "@/features/movies/pages/MovieDetailPage";
 import AfishaPage from "@/features/poster/pages/AfishaPage";
 import ComingSoonPage from "@/features/upcoming/pages/ComingSoonPage";
+import FavoriteFilmsPage from "@/features/user/pages/FavoriteFilmsPage";
 import { ProtectedRoute } from "./ProtectedRoute";
 
 export const Router = createBrowserRouter([
@@ -37,6 +38,7 @@ export const Router = createBrowserRouter([
                     { path: "/afisha", element: <AfishaPage /> },
                     { path: "/coming-soon", element: <ComingSoonPage /> },
                     { path: "/profile", element: <ProfilePage /> },
+                    { path: "/favorites", element: <FavoriteFilmsPage /> },
 
                     // User path example
                     // { path: "...", element: (<ProtectedRoute requiredRoles={["User, Admin"]}>...</ProtectedRoute>)}
