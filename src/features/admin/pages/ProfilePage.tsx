@@ -22,8 +22,12 @@ const ProfilePage = () => {
         const fetchProfile = async () => {
             try {
                 const response = await api.get("/v1/me");
-                console.log("Дані профілю:", response.data);
-                setUserData(response.data);
+
+                const formattedData = {
+                    ...response.data,
+                    birthDate: response.data.birthDate ? response.data.birthDate.split('T')[0] : "",
+                };
+                setUserData(formattedData);
             } catch (error: any) {
                 console.error("Помилка завантаження:", error.response?.status, error.message);
             } finally {
@@ -35,6 +39,9 @@ const ProfilePage = () => {
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
+
+        if (name === "birthDate" && !value) return;
+
         setUserData((prev) => {
             if (!prev) return null;
             return { ...prev, [name]: value };
@@ -44,11 +51,19 @@ const ProfilePage = () => {
     const handleSave = async () => {
         if (!userData) return;
 
+        const year = new Date(userData.birthDate).getFullYear();
+        if (year < 1900){
+            alert("Будь ласка, введіть коректний рік народження!")
+            return;
+        }
+
         try {
             const payload = {
                 firstName: userData.firstName,
                 lastName: userData.lastName,
-                birthDate: userData.birthDate,
+                birthDate: userData.birthDate.includes('T')
+                ? userData.birthDate.split('T')[0]
+                : userData.birthDate,
                 phoneNumber: userData.phoneNumber,
             };
 
@@ -56,13 +71,9 @@ const ProfilePage = () => {
 
             if (response.status === 200) {
 
-                updateUserInfo({
-                    firstName: response.data.firstName,
-                    lastName: response.data.lastName,
-                });
-
+                updateUserInfo(payload);
+                setUserData(prev => prev ? { ...prev, ...payload } : null);
                 alert("Дані успішно збережено!")
-                setUserData(response.data);
             }
         } catch (error: any) {
             console.error("Помилка збереження:", error.response?.data || error.message);
@@ -71,7 +82,6 @@ const ProfilePage = () => {
     };
 
     if (isLoading) return <div className="text-white p-10 text-center font-light">Синхронізація...</div>;
-
 
     if (!userData) return <div className="text-white p-10 text-center font-light">Профіль не знайдено</div>;
 
