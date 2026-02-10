@@ -7,6 +7,7 @@ import SessionCard from "../components/SessionCard";
 import type { MovieDetailsDto, SessionListItemDto, DateOption } from "../types";
 import { SessionStatus } from "../types";
 import { getMovieById, getSessionsByMovieId } from "../api/movieApi";
+import { api } from "@/shared/api/Axios";
 
 const DAYS = ["НД", "ПН", "ВТ", "СР", "ЧТ", "ПТ", "СБ"];
 
@@ -61,6 +62,11 @@ const MovieDetailPage = () => {
   const dates = useMemo(() => getDates(), []);
   const [selectedDate, setSelectedDate] = useState(dates[0]?.value ?? "");
   const [isFavorite, setIsFavorite] = useState(false);
+
+  const OnFavoriteClick = async () => {
+    await api.post(`/v1/favorite/${id}`);
+    setIsFavorite((prev) => !prev);
+  }
 
   useEffect(() => {
     if (!id) return;
@@ -142,7 +148,7 @@ const MovieDetailPage = () => {
         <MovieInfo
           movie={movie}
           isFavorite={isFavorite}
-          onToggleFavorite={() => setIsFavorite((prev) => !prev)}
+          onToggleFavorite={OnFavoriteClick}
         />
       </div>
 
