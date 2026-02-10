@@ -4,18 +4,18 @@ import clsx from "clsx";
 import Logo from "@/assets/svg/components/Logo";
 import { UserMenu } from "@/features/menu/components/UserMenu";
 import { useAuth } from "@/app/providers/AuthProvider";
-import Avatar from "@/assets/svg/components/Avatar";
 import { truncate } from "string-truncate";
-
+import { ProfileDropdown } from "./ProfileDropdown";
+import { useState, useRef, useEffect } from "react";
 
 const Header = () => {
-
     const navigate = useNavigate();
     const location = useLocation();
     const { isAuth, user, logout } = useAuth();
+    const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
+    const dropdownRef = useRef<HTMLDivElement>(null);
 
     console.log(user);
-
 
     const linkClassName = (path: string) => clsx(
         "flex items-center",
@@ -24,8 +24,22 @@ const Header = () => {
         location.pathname === path
             ? "text-red-500 dark:text-secondary-dark"
             : "text-primary-light dark:text-primary-dark hover:text-red-500 dark:hover:text-secondary-dark"
-
     );
+
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+                setIsProfileDropdownOpen(false);
+            }
+        };
+
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, []);
+
+    const toggleProfileDropdown = () => {
+        setIsProfileDropdownOpen(!isProfileDropdownOpen);
+    };
 
     return (
         <>
@@ -70,7 +84,7 @@ const Header = () => {
                 </nav>
 
                 {/* { Options } */}
-                <div className="flex gap-2 sm:gap-4 items-center">
+                <div className="flex gap-2 sm:gap-4 items-center" ref={dropdownRef}>
                     {!isAuth ? (
                         <>
                             <Button className="hidden sm:block" onClick={() => navigate("/login")}>Увійти</Button>
@@ -79,17 +93,35 @@ const Header = () => {
                         </>
                     ) : (
                         <>
-                            <div className="flex flex-col sm:flex-row items-center gap-1">
-                                <Avatar className={clsx(
-                                    "text-secondary-light dark:text-secondary-dark",
-                                    "w-8 h-8"
-                                )}/>
-                                <p className={clsx(
-                                    "text-primary-light dark:text-primary-dark",
-                                    "font-montserrat"
-                                )}>{truncate(user?.firstName ?? "", 8)}</p>
+                            <div className="relative">
+                                <button
+                                    onClick={toggleProfileDropdown}
+                                    className="flex flex-col sm:flex-row items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity"
+                                >
+                                    <div className="w-10 h-10 rounded-full overflow-hidden flex items-center justify-center border border-red-500/50 bg-red-500/5">
+                                        <span className="text-gray-800 dark:text-white font-bold text-base uppercase">
+                                            {user?.firstName?.charAt(0) || "U"}
+                                        </span>
+                                    </div>
+                                    <p className={clsx(
+                                        "text-primary-light dark:text-primary-dark",
+                                        "font-montserrat text-base hidden sm:block"
+                                    )}>
+                                        {truncate(user?.firstName ?? "", 8)}
+                                    </p>
+                                </button>
+
+                                {isProfileDropdownOpen && (
+                                    <ProfileDropdown onClose={() => setIsProfileDropdownOpen(false)} />
+                                )}
                             </div>
-                            <Button className="hidden sm:block" onClick={() => logout()}>Вийти</Button>
+
+                            <Button
+                                className="hidden sm:block"
+                                onClick={() => logout()}
+                            >
+                                Вийти
+                            </Button>
                         </>
                     )}
                     <UserMenu/>
