@@ -1,13 +1,12 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import clsx from "clsx";
 import MovieInfo from "../components/MovieInfo";
 import DatePicker from "../components/DatePicker";
 import SessionCard from "../components/SessionCard";
-import type { Session, DateOption } from "../types";
-
-// TODO: Replace with API call
-import { MOCK_MOVIES, MOCK_SESSIONS } from "../data/MockData.ts";
+import type { MovieDetailsDto, Session, DateOption } from "../types";
+import { getMovieById } from "../api/movieApi";
+import { MOCK_SESSIONS } from "../data/MockData";
 
 const DAYS = ["НД", "ПН", "ВТ", "СР", "ЧТ", "ПТ", "СБ"];
 
@@ -54,17 +53,52 @@ const MovieDetailPage = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
-  const movie = MOCK_MOVIES.find((m) => m.id === Number(id));
+  const [movie, setMovie] = useState<MovieDetailsDto | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
 
   const dates = useMemo(() => getDates(), []);
   const [selectedDate, setSelectedDate] = useState(dates[0]?.value ?? "");
   const [isFavorite, setIsFavorite] = useState(false);
 
-  if (!movie) {
+  useEffect(() => {
+    if (!id) return;
+    let mounted = true;
+
+    (async () => {
+      try {
+        setIsLoading(true);
+        setLoadError(null);
+        const data = await getMovieById(id);
+        if (!mounted) return;
+        setMovie(data);
+      } catch (e) {
+        console.error("movie load error", e);
+        if (!mounted) return;
+        setLoadError("Не вдалося завантажити фільм");
+      } finally {
+        if (mounted) setIsLoading(false);
+      }
+    })();
+
+    return () => { mounted = false; };
+  }, [id]);
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <p className="text-description-light dark:text-description-dark text-lg font-montserrat">
+          Завантаження...
+        </p>
+      </div>
+    );
+  }
+
+  if (loadError || !movie) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] gap-6">
         <h2 className="text-2xl font-bold text-primary-light dark:text-primary-dark font-montserrat">
-          Фільм не знайдено
+          {loadError ?? "Фільм не знайдено"}
         </h2>
         <button onClick={() => navigate("/")} className={backBtnClass}>
           <ChevronLeftIcon />

@@ -1,26 +1,23 @@
-export interface Movie {
-  id: number;
+export interface MovieDetailsDto {
+  id: string;
   title: string;
-  originalTitle: string;
   rating: number;
-  genre: string[];
-  ageRestriction: string;
+  genres: string[];
+  ageRating: number;
   year: number;
   duration: number;
-  endDate: string;
+  rentalStartDate: string;
   description: string;
   actors: string[];
   poster: string;
-  formats: SessionFormat[];
+  formats: string[];
 }
-
-export type SessionFormat = "2D" | "3D" | "IMAX" | "4DX";
 
 export interface Session {
   id: number;
-  movieId: number;
+  movieId: string;
   time: string;
-  format: SessionFormat;
+  format: string;
   hall: number;
   price: number;
   availableSeats: number;
