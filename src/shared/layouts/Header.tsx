@@ -5,7 +5,7 @@ import Logo from "@/assets/svg/components/Logo";
 import { UserMenu } from "@/features/menu/components/UserMenu";
 import { useAuth } from "@/app/providers/AuthProvider";
 import { truncate } from "string-truncate";
-import { ProfileDropdown } from "./ProfileDropdown";
+import { UserDropdown } from "./UserDropdown.tsx";
 import { useState, useRef, useEffect } from "react";
 
 const Header = () => {
@@ -112,7 +112,7 @@ const Header = () => {
                                 </button>
 
                                 {isProfileDropdownOpen && (
-                                    <ProfileDropdown onClose={() => setIsProfileDropdownOpen(false)} />
+                                    <UserDropdown onClose={() => setIsProfileDropdownOpen(false)} />
                                 )}
                             </div>
 

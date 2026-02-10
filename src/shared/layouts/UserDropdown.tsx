@@ -7,7 +7,7 @@ interface ProfileDropdownProps {
     onClose: () => void;
 }
 
-export const ProfileDropdown = ({ onClose }: ProfileDropdownProps) => {
+export const UserDropdown = ({ onClose }: ProfileDropdownProps) => {
     const { user, logout } = useAuth();
     const isAdmin = user?.roles?.includes("Admin");
 
