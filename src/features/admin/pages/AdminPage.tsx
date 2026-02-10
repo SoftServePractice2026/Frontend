@@ -33,7 +33,7 @@ const AdminPage = () => {
             setIsLoading(true);
             try {
                 const dateParam = format(selectedDate, 'yyyy-MM-dd');
-                const response = await api.get(`/v1/halls?date=${dateParam}`);
+                const response = await api.get(`/v1/halls?Date=${dateParam}`);
                 setHalls(response.data);
             } catch (error) {
                 console.error("Помилка завантаження залів:", error);
