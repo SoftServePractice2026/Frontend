@@ -1,15 +1,5 @@
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
-import type {
-  AuthResponse,
-  IdentityDetailsDto,
-  LoginRequest,
-} from "@/features/user/types";
+import {createContext, useContext, useEffect, useRef, useState,} from "react";
+import type {AuthResponse, IdentityDetailsDto, LoginRequest,} from "@/features/user/types";
 import { api, refreshClient, setAccessToken, setRefreshHandler } from "@/shared/api/Axios";
 
 interface AuthContextType {
@@ -17,16 +7,13 @@ interface AuthContextType {
   user: IdentityDetailsDto | null;
   login: (request: LoginRequest) => Promise<void>;
   logout: () => Promise<void>;
+  updateUserInfo: (updatedData: Partial<IdentityDetailsDto>) => void; // Метод у інтерфейсі
   isLoading: boolean;
 }
 
 const AuthContext = createContext<AuthContextType>(null!);
 
-export const AuthProvider = ({
-  children,
-}: {
-  children: React.ReactNode;
-}) => {
+export const AuthProvider = ({children,}: { children: React.ReactNode; }) => {
   const [isAuth, setIsAuth] = useState(false);
   const [user, setUser] = useState<IdentityDetailsDto | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -34,10 +21,13 @@ export const AuthProvider = ({
   const refreshTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
   const refreshPromise = useRef<Promise<string> | null>(null);
 
-  // Refresh access token
+  const updateUserInfo = (updatedData: Partial<IdentityDetailsDto>) => {
+    setUser((prev) => (prev ? { ...prev, ...updatedData } : null));
+  };
+
   const refreshAccessToken = async (): Promise<string> => {
     if (refreshPromise.current) {
-      return refreshPromise.current; // 👈 якщо вже йде refresh — чекаємо його
+      return refreshPromise.current;
     }
 
     refreshPromise.current = (async () => {
@@ -49,19 +39,18 @@ export const AuthProvider = ({
 
         return data.token;
       } finally {
-        refreshPromise.current = null; // 🔥 скидаємо lock
+        refreshPromise.current = null;
       }
     })();
 
     return refreshPromise.current;
   };
 
-  // Планування refresh
   const scheduleTokenRefresh = (expiryDate: string) => {
     const expiresAt = new Date(expiryDate).getTime();
     const now = Date.now();
 
-    const refreshTime = expiresAt - now - 30_000; // за 30 сек до expire
+    const refreshTime = expiresAt - now - 30_000;
 
     if (refreshTimeout.current) {
       clearTimeout(refreshTimeout.current);
@@ -103,13 +92,11 @@ export const AuthProvider = ({
     setIsAuth(false);
   };
 
-  //При першому завантаженні
   useEffect(() => {
     setRefreshHandler(refreshAccessToken);
 
     const initAuth = async () => {
       try {
-        // пробуємо одразу refresh
         const token = await refreshAccessToken();
 
         setAccessToken(token);
@@ -129,9 +116,9 @@ export const AuthProvider = ({
   }, []);
 
   return (
-    <AuthContext.Provider value={{ isAuth, user, login, logout, isLoading }}>
-      {!isLoading && children}
-    </AuthContext.Provider>
+      <AuthContext.Provider value={{ isAuth, user, login, logout, updateUserInfo, isLoading }}>
+        {!isLoading && children}
+      </AuthContext.Provider>
   );
 };
 

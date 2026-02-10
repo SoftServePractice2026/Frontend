@@ -19,6 +19,7 @@ import AfishaPage from "@/features/poster/pages/AfishaPage";
 import ComingSoonPage from "@/features/upcoming/pages/ComingSoonPage";
 import FavoriteFilmsPage from "@/features/user/pages/FavoriteFilmsPage";
 import { ProtectedRoute } from "./ProtectedRoute";
+import {MyTicketsPage} from "@/features/user/pages/MyTicketsPage.tsx";
 
 export const Router = createBrowserRouter([
     {
@@ -45,6 +46,9 @@ export const Router = createBrowserRouter([
 
                     // Admin path example
                     // { path: "...", element: (<ProtectedRoute requiredRoles={["Admin"]}>...</ProtectedRoute>)}
+
+
+                    { path: "my-tickets", element: <MyTicketsPage />},
 
                     { path: "/unauthorized", element: <UnauthorizedPage /> }
                 ]

@@ -61,6 +61,21 @@ export const ProfileDropdown = ({ onClose }: ProfileDropdownProps) => {
                 </Link>
 
                 <Link
+                    to="/my-tickets"
+                    onClick={onClose}
+                    className="w-full flex items-center gap-4 px-5 py-4 text-gray-300 hover:text-white hover:bg-white/5 transition-all rounded-xl group text-left"
+                >
+                    <div className="w-6 h-6 flex items-center justify-center opacity-70 group-hover:opacity-100 transition-opacity">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v2z" />
+                            <line x1="9" y1="9" x2="9" y2="15" />
+                            <line x1="13" y1="9" x2="13" y2="15" />
+                        </svg>
+                    </div>
+                    <span className="text-base font-normal">Мої квитки</span>
+                </Link>
+
+                <Link
                     to="/"
                     onClick={onClose}
                     className="w-full flex items-center gap-4 px-5 py-4 text-gray-300 hover:text-white hover:bg-white/5 transition-all rounded-xl group text-left"
@@ -77,7 +92,7 @@ export const ProfileDropdown = ({ onClose }: ProfileDropdownProps) => {
             <div className="p-1 border-t border-gray-800/50">
                 <button
                     onClick={() => {
-                        logout(); // Очищаємо токени при виході
+                        logout();
                         onClose();
                     }}
                     className="w-full flex items-center gap-4 px-5 py-4 text-[#E12E2E]/80 hover:text-[#E12E2E] hover:bg-[#E12E2E]/5 transition-all rounded-xl group text-left"
