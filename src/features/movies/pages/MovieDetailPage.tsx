@@ -4,9 +4,9 @@ import clsx from "clsx";
 import MovieInfo from "../components/MovieInfo";
 import DatePicker from "../components/DatePicker";
 import SessionCard from "../components/SessionCard";
-import type { MovieDetailsDto, Session, DateOption } from "../types";
-import { getMovieById } from "../api/movieApi";
-import { MOCK_SESSIONS } from "../data/MockData";
+import type { MovieDetailsDto, SessionListItemDto, DateOption } from "../types";
+import { SessionStatus } from "../types";
+import { getMovieById, getSessionsByMovieId } from "../api/movieApi";
 
 const DAYS = ["НД", "ПН", "ВТ", "СР", "ЧТ", "ПТ", "СБ"];
 
@@ -54,6 +54,7 @@ const MovieDetailPage = () => {
   const navigate = useNavigate();
 
   const [movie, setMovie] = useState<MovieDetailsDto | null>(null);
+  const [sessions, setSessions] = useState<SessionListItemDto[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
 
@@ -69,9 +70,16 @@ const MovieDetailPage = () => {
       try {
         setIsLoading(true);
         setLoadError(null);
-        const data = await getMovieById(id);
+        const [movieData, sessionsData] = await Promise.all([
+          getMovieById(id),
+          getSessionsByMovieId(id),
+        ]);
         if (!mounted) return;
-        setMovie(data);
+        setMovie(movieData);
+        const list = Array.isArray(sessionsData)
+          ? sessionsData
+          : (sessionsData.sessions ?? []);
+        setSessions(list);
       } catch (e) {
         console.error("movie load error", e);
         if (!mounted) return;
@@ -108,12 +116,17 @@ const MovieDetailPage = () => {
     );
   }
 
-  const filteredSessions = MOCK_SESSIONS.filter(
-    (s) => s.movieId === movie.id && movie.formats.includes(s.format),
-  );
+  const filteredSessions = sessions.filter((s) => {
+    const sessionDate = new Date(s.startTime).toISOString().split("T")[0];
+    return (
+      sessionDate === selectedDate &&
+      s.sessionStatus !== SessionStatus.Cancelled &&
+      s.sessionStatus !== SessionStatus.Finished
+    );
+  });
 
-  const handleSessionClick = (session: Session) => {
-    navigate(`/seats/${movie.id}/${session.id}`);
+  const handleSessionClick = (session: SessionListItemDto) => {
+    navigate(`/booking/${session.id}`);
   };
 
   return (
