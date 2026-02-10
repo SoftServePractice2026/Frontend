@@ -13,14 +13,27 @@ export interface MovieDetailsDto {
   formats: string[];
 }
 
-export interface Session {
-  id: number;
+export enum SessionStatus {
+  Active = 1,
+  Cancelled = 2,
+  Finished = 3,
+  Scheduled = 4,
+}
+
+export interface SessionListItemDto {
+  id: string;
+  movieTitle: string;
   movieId: string;
-  time: string;
-  format: string;
-  hall: number;
-  price: number;
-  availableSeats: number;
+  hallName: string;
+  hallId: string;
+  startTime: string;
+  endTime: string;
+  sessionStatus: SessionStatus;
+}
+
+export interface SessionFilterResultDto {
+  sessions: SessionListItemDto[];
+  totalCount: number;
 }
 
 export interface DateOption {

@@ -1,10 +1,15 @@
 import clsx from "clsx";
-import type { Session } from "../types";
+import type { SessionListItemDto } from "../types";
 
 interface SessionCardProps {
-  session: Session;
-  onClick: (session: Session) => void;
+  session: SessionListItemDto;
+  onClick: (session: SessionListItemDto) => void;
 }
+
+const formatTime = (dateString: string) => {
+  const date = new Date(dateString);
+  return date.toLocaleTimeString("uk-UA", { hour: "2-digit", minute: "2-digit" });
+};
 
 const SessionCard = ({ session, onClick }: SessionCardProps) => {
   return (
@@ -21,16 +26,13 @@ const SessionCard = ({ session, onClick }: SessionCardProps) => {
       )}
     >
       <span className="text-[28px] font-extrabold text-primary-light dark:text-primary-dark leading-none">
-        {session.time}
+        {formatTime(session.startTime)}
+      </span>
+      <span className="text-[13px] text-description-light dark:text-description-dark mt-2">
+        {formatTime(session.endTime)}
       </span>
       <span className="text-sm font-bold mt-2 text-accent-dark_second">
-        {session.format}
-      </span>
-      <span className="text-[13px] text-description-light dark:text-description-dark mt-1">
-        Зал {session.hall}
-      </span>
-      <span className="text-[17px] font-bold text-secondary-dark mt-3">
-        {session.price} ₴
+        {session.hallName}
       </span>
     </button>
   );
