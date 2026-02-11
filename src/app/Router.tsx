@@ -38,7 +38,7 @@ export const Router = createBrowserRouter([
                     { path: "/forgot-password", element: <ForgotPage /> },
                     { path: "/reset-password", element: <ResetPasswordPage /> },
 
-                    { path: "/booking/:sessionId", element: <BookingPage /> },
+                    { path: "/booking/:id", element: <BookingPage /> },
                     { path: "/contacts", element : <ContactPage /> },
                     { path: "/movie/:id", element: <MovieDetailPage /> },
                     { path: "/afisha", element: <AfishaPage /> },
@@ -70,7 +70,7 @@ export const Router = createBrowserRouter([
                     { path: "posters", element: <AfishaPage />},
                     { path: "coming-soon", element: < ComingSoonPage />},
 
-                    { path: "hall/:id", element: <HallSessionPage/>},
+                    { path: "hall/:id/:date", element: <HallSessionPage/>},
                     { path: "session/:sessionId", element: <SessionDetailsPage/> },
                     { path: "session/:sessionId/seat/:seatId", element: <SeatDetailsPage /> },
                 ]
