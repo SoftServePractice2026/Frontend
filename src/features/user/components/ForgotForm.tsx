@@ -1,26 +1,24 @@
-import { useAuth } from "@/app/providers/AuthProvider";
 import Input from "@/shared/ui/Input";
 import { Popup, type PopupType } from "@/shared/ui/Popup";
+import SubmitButton from "@/shared/ui/SubmitButton";
 import { zodResolver } from "@hookform/resolvers/zod";
 import clsx from "clsx";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import z, { email } from "zod";
-import type { LoginRequest } from "../types";
+import type { ForgotPasswordRequest, ForgotPasswordResponse } from "../types";
+import { api } from "@/shared/api/Axios";
 import type { AppError } from "@/shared/types/errors";
-import SubmitButton from "@/shared/ui/SubmitButton";
-import { Link } from "react-router-dom";
 
 //Validation
-const loginSchema = z.object({
+const forgotSchema = z.object({
     email: z.string().email(),
-    password: z.string(),
 })
 
 //Type for validation schema
-type LoginFormValues = z.infer<typeof loginSchema>;
+type ForgotFormValues = z.infer<typeof forgotSchema>;
 
-const LoginForm = () => {
+const ForgotForm = () => {
 
     const [popup, setPopup] = useState<{
         open: boolean;
@@ -32,24 +30,22 @@ const LoginForm = () => {
         message: "",
     });
 
-    const { login } = useAuth();
+    const { register, handleSubmit, formState: { errors, isSubmitting }, } = useForm<ForgotFormValues>({
+        resolver: zodResolver(forgotSchema),
+    });
 
-    const { register, handleSubmit, formState: { errors, isSubmitting }, } = useForm<LoginFormValues>({
-        resolver: zodResolver(loginSchema),
-    })
-
-    const onSumbit = async (data: LoginFormValues) => {
-        const request: LoginRequest = {
-            email: data.email,
-            password: data.password,
-        }
+    const onSumbit = async (data: ForgotFormValues) => {
+        const request: ForgotPasswordRequest = {
+            email: data.email
+        };
 
         try {
-            await login(request);
+            const result = await api.post<ForgotPasswordResponse>("/v1/forgot-password", request);
+
             setPopup({
                 open: true,
                 type: "success",
-                message: "Дані успішно збережено",
+                message: "Дані успішно відправлені",
             });
         } catch (err) {
             const error = err as AppError;
@@ -95,7 +91,12 @@ const LoginForm = () => {
                     <h1 className={clsx(
                         "text-primary-light dark:text-primary-dark",
                         "font-montserrat font-bold text-2xl sm:text-3xl md:text-4xl text-center"
-                    )}>Вхід</h1>
+                    )}>Відновлення паролю</h1>
+
+                    <p className={clsx(
+                        "text-[#D8D8D8] dark:text-primary-dark",
+                        "max-w-[400px] text-center text-base"
+                    )}>Укажіть електронну пошту і ми надішлемо вам код для відновлення паролю</p>
 
                     <Input
                         id="email"
@@ -106,28 +107,7 @@ const LoginForm = () => {
                         error={errors.email?.message}
                     />
 
-                    <Input
-                        id="password"
-                        label="Пароль"
-                        type="password"
-                        placeholder="Введіть пароль..."
-                        {...register("password")}
-                        error={errors.password?.message}
-                    />
-
-                    <div className={clsx(
-                        "flex gap-[20px] sm:gap-[80px]"
-                    )}>
-                        <Link to="/forgot-password" className={clsx(
-                            "text-secondary-light dark:text-secondary-dark"
-                        )}>Забули пароль?</Link>
-                        <Link to="/registration" className={clsx(
-                            "text-primary-light dark:text-primary-dark",
-                            "font-montserrat font-medium"
-                        )}>Створити акаунт</Link>
-                    </div>
-
-                    <SubmitButton disabled={isSubmitting}>Увійти</SubmitButton>
+                    <SubmitButton disabled={isSubmitting} className="text-sm font-bolder">Надіслати</SubmitButton>
                 </div>
             </form>
 
@@ -142,4 +122,5 @@ const LoginForm = () => {
         </>
     );
 }
-export default LoginForm;
+
+export default ForgotForm;

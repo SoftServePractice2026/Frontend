@@ -20,6 +20,8 @@ import ComingSoonPage from "@/features/upcoming/pages/ComingSoonPage";
 import FavoriteFilmsPage from "@/features/user/pages/FavoriteFilmsPage";
 import { ProtectedRoute } from "./ProtectedRoute";
 import {MyTicketsPage} from "@/features/user/pages/MyTicketsPage.tsx";
+import ForgotPage from "@/features/user/pages/ForgotPage";
+import ResetPasswordPage from "@/features/user/pages/ResetPasswordPage";
 
 export const Router = createBrowserRouter([
     {
@@ -30,9 +32,12 @@ export const Router = createBrowserRouter([
                 element: <MainLayout />,
                 children: [
                     { path: "/", element: <HomePage /> },
+
                     { path: "/registration", element: <RegistrationPage /> },
                     { path: "/login", element: <LoginPage /> },
-                    { path: "/recovery", element: <RegistrationPage /> },
+                    { path: "/forgot-password", element: <ForgotPage /> },
+                    { path: "/reset-password", element: <ResetPasswordPage /> },
+
                     { path: "/booking/:sessionId", element: <BookingPage /> },
                     { path: "/contacts", element : <ContactPage /> },
                     { path: "/movie/:id", element: <MovieDetailPage /> },
@@ -40,17 +45,16 @@ export const Router = createBrowserRouter([
                     { path: "/coming-soon", element: <ComingSoonPage /> },
                     { path: "/profile", element: <ProfilePage /> },
                     { path: "/favorites", element: <FavoriteFilmsPage /> },
+                    
+                    { path: "my-tickets", element: <MyTicketsPage />},
+
+                    { path: "/unauthorized", element: <UnauthorizedPage /> }
 
                     // User path example
                     // { path: "...", element: (<ProtectedRoute requiredRoles={["User, Admin"]}>...</ProtectedRoute>)}
 
                     // Admin path example
                     // { path: "...", element: (<ProtectedRoute requiredRoles={["Admin"]}>...</ProtectedRoute>)}
-
-
-                    { path: "my-tickets", element: <MyTicketsPage />},
-
-                    { path: "/unauthorized", element: <UnauthorizedPage /> }
                 ]
             },
             {

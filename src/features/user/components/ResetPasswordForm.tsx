@@ -1,26 +1,32 @@
-import { useAuth } from "@/app/providers/AuthProvider";
 import Input from "@/shared/ui/Input";
 import { Popup, type PopupType } from "@/shared/ui/Popup";
+import SubmitButton from "@/shared/ui/SubmitButton";
 import { zodResolver } from "@hookform/resolvers/zod";
 import clsx from "clsx";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import z, { email } from "zod";
-import type { LoginRequest } from "../types";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import z from "zod";
+import type { RecoveryPasswordRequest } from "../types";
+import { api } from "@/shared/api/Axios";
 import type { AppError } from "@/shared/types/errors";
-import SubmitButton from "@/shared/ui/SubmitButton";
-import { Link } from "react-router-dom";
 
 //Validation
-const loginSchema = z.object({
-    email: z.string().email(),
-    password: z.string(),
+const resetPasswordSchema = z.object({
+    password: z.string().min(6, "Мінімум 6 символів").regex(/^(?=.*[A-Z])(?=.*\d).{6,}$/, "Мінімум 1 велика літера і 1 цифра"),
 })
 
 //Type for validation schema
-type LoginFormValues = z.infer<typeof loginSchema>;
+type ResetPasswordFormValues = z.infer<typeof resetPasswordSchema>;
 
-const LoginForm = () => {
+const ResetPasswordForm = () => {
+    const [searchParams] = useSearchParams();
+    const navigate = useNavigate();
+
+    const params = {
+        email: searchParams.get("email"),
+        token: searchParams.get("token"),
+    };
 
     const [popup, setPopup] = useState<{
         open: boolean;
@@ -32,24 +38,24 @@ const LoginForm = () => {
         message: "",
     });
 
-    const { login } = useAuth();
+    const { register, handleSubmit, formState: { errors, isSubmitting }, } = useForm<ResetPasswordFormValues>({
+        resolver: zodResolver(resetPasswordSchema),
+    });
 
-    const { register, handleSubmit, formState: { errors, isSubmitting }, } = useForm<LoginFormValues>({
-        resolver: zodResolver(loginSchema),
-    })
-
-    const onSumbit = async (data: LoginFormValues) => {
-        const request: LoginRequest = {
-            email: data.email,
-            password: data.password,
-        }
+    const onSumbit = async (data: ResetPasswordFormValues) => {
+        const request: RecoveryPasswordRequest = {
+            email: params.email!,
+            token: params.token!,
+            newPassword: data.password,
+        };
 
         try {
-            await login(request);
+            await api.post("/v1/reset-password", request)
+
             setPopup({
                 open: true,
                 type: "success",
-                message: "Дані успішно збережено",
+                message: "Пароль успішно зміненно",
             });
         } catch (err) {
             const error = err as AppError;
@@ -83,6 +89,17 @@ const LoginForm = () => {
         }
     }
 
+    useEffect(() => {
+        if (params.token == undefined || params.token == "" || params.token == null) {
+            navigate("/");
+        }
+
+        if (params.email == undefined || params.email == "" || params.email == null) {
+            navigate("/");
+        }
+
+    }, []);
+
     return (
         <>
             <form onSubmit={handleSubmit(onSumbit)} className={clsx(
@@ -95,15 +112,19 @@ const LoginForm = () => {
                     <h1 className={clsx(
                         "text-primary-light dark:text-primary-dark",
                         "font-montserrat font-bold text-2xl sm:text-3xl md:text-4xl text-center"
-                    )}>Вхід</h1>
+                    )}>Відновлення паролю</h1>
+
+                    <p className={clsx(
+                        "text-[#D8D8D8] dark:text-primary-dark",
+                        "max-w-[400px] text-center text-base"
+                    )}>Введіть новий пароль</p>
 
                     <Input
                         id="email"
                         label="Пошта"
                         type="text"
-                        placeholder="Напр: your_email@gmail.com"
-                        {...register("email")}
-                        error={errors.email?.message}
+                        value={params.email!}
+                        disabled
                     />
 
                     <Input
@@ -115,19 +136,7 @@ const LoginForm = () => {
                         error={errors.password?.message}
                     />
 
-                    <div className={clsx(
-                        "flex gap-[20px] sm:gap-[80px]"
-                    )}>
-                        <Link to="/forgot-password" className={clsx(
-                            "text-secondary-light dark:text-secondary-dark"
-                        )}>Забули пароль?</Link>
-                        <Link to="/registration" className={clsx(
-                            "text-primary-light dark:text-primary-dark",
-                            "font-montserrat font-medium"
-                        )}>Створити акаунт</Link>
-                    </div>
-
-                    <SubmitButton disabled={isSubmitting}>Увійти</SubmitButton>
+                    <SubmitButton disabled={isSubmitting} className="text-sm font-bolder">Зберегти</SubmitButton>
                 </div>
             </form>
 
@@ -142,4 +151,5 @@ const LoginForm = () => {
         </>
     );
 }
-export default LoginForm;
+
+export default ResetPasswordForm;
