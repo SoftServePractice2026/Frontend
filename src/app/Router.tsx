@@ -66,7 +66,7 @@ export const Router = createBrowserRouter([
                     { path: "posters", element: <AfishaPage />},
                     { path: "coming-soon", element: < ComingSoonPage />},
 
-                    { path: "hall/:id", element: <HallSessionPage/>},
+                    { path: "hall/:id/:date", element: <HallSessionPage/>},
                     { path: "session/:sessionId", element: <SessionDetailsPage/> },
                     { path: "session/:sessionId/seat/:seatId", element: <SeatDetailsPage /> },
                 ]
