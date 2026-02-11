@@ -9,9 +9,10 @@ interface PaymentModalProps {
     totalPrice: number;
     movieTitle: string;
     seats: string[];
+    onSuccess: () => void;
 }
 
-export const PaymentModal = ({ isOpen, onClose, totalPrice, movieTitle, seats }: PaymentModalProps) => {
+export const PaymentModal = ({ isOpen, onClose, totalPrice, movieTitle, seats, onSuccess }: PaymentModalProps) => {
     const [status, setStatus] = useState<'form' | 'processing' | 'success'>('form');
 
     if (!isOpen) return null;
@@ -19,8 +20,10 @@ export const PaymentModal = ({ isOpen, onClose, totalPrice, movieTitle, seats }:
     const handlePay = (e: FormEvent) => {
         e.preventDefault();
         setStatus('processing');
+
         setTimeout(() => {
             setStatus('success');
+            onSuccess();
             setTimeout(() => onClose(), 3000);
         }, 2000);
     };
