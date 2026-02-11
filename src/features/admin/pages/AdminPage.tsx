@@ -23,12 +23,19 @@ const AdminPage = () => {
 
     const [selectedDate, setSelectedDate] = useState<Date>(startOfToday());
 
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [newSession, setNewSession] = useState({
+        movieId: "",
+        hallId: "",
+        startTime: format(new Date(), "yyyy-MM-dd'T'HH:mm")
+    })
+
     const getHallSizeLabel = (size: number) => {
         const sizes = ["Small", "Medium", "Large"];
         return sizes[size] || "Unknown";
     };
 
-    useEffect(() => {
+    // useEffect(() => {
         const fetchHalls = async () => {
             setIsLoading(true);
             try {
@@ -37,18 +44,37 @@ const AdminPage = () => {
                 setHalls(response.data);
             } catch (error) {
                 console.error("Помилка завантаження залів:", error);
-                const mockHalls: HallDetailsDto[] = [
-                    { id: "1", name: "Зал A", isActive: true, hallSize: 1 },
-                    { id: "2", name: "Зал B", isActive: true, hallSize: 2 },
-                    { id: "3", name: "IMAX VIP", isActive: false, hallSize: 0 },
-                ]
-                setHalls(mockHalls);
+                // const mockHalls: HallDetailsDto[] = [
+                //     { id: "1", name: "Зал A", isActive: true, hallSize: 1 },
+                //     { id: "2", name: "Зал B", isActive: true, hallSize: 2 },
+                //     { id: "3", name: "IMAX VIP", isActive: false, hallSize: 0 },
+                // ]
+                setHalls([]);
             } finally {
                 setIsLoading(false);
             }
         };
-        fetchHalls();
-    }, [selectedDate]);
+        useEffect(() => {
+            fetchHalls();
+
+         }, [selectedDate]);
+
+        const handleCreateSession = async (e: React.FormEvent) => {
+            e.preventDefault();
+            try {
+                const utcDate = new Date(newSession.startTime).toISOString();
+
+                await api.post("/v1/sessions", {
+                    ...newSession,
+                    startTime: utcDate
+                });
+                alert("Сеанс успішно створено!")
+                setIsModalOpen(false);
+                fetchHalls();
+            } catch (error: any) {
+                alert("Помилка: " + (error.response?.data?.message || "Перевірте консоль"));
+            }
+        }
 
     return (
         <div className="max-w-4xl mx-auto relative">
@@ -150,7 +176,10 @@ const AdminPage = () => {
                 {halls.map((hall) => (
                     <div
                         key={hall.id}
-                        onClick={() => navigate(`/admin/hall/${hall.id}`)}
+                        onClick={() => {
+                            const dateParam = format(selectedDate, 'yyyy-MM-dd');
+                            navigate(`/admin/hall/${hall.id}/${dateParam}`)
+                        }}
                         className="bg-[#1A1A1F] border border-gray-800 hover:border-[#E12E2E]/50 p-6 rounded-[24px] flex justify-between items-center cursor-pointer transition-all duration-300 group shadow-lg"
                     >
                         <div className="flex flex-col gap-2">
