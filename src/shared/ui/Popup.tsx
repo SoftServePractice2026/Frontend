@@ -1,7 +1,6 @@
 import clsx from "clsx";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { success } from "zod";
 
 export type PopupType = "success" | "error" | "warning";
 
@@ -13,6 +12,7 @@ type PopupProps = {
     autoCloseMs?: number;
     onClose: () => void;
     redirect?: string;
+    redirectParams?: URLSearchParams;
 };
 
 export const Popup = ({
@@ -22,7 +22,8 @@ export const Popup = ({
     message,
     autoCloseMs = 3000,
     onClose,
-    redirect
+    redirect,
+    redirectParams
 }: PopupProps) => {
     const navigate = useNavigate();
     useEffect(() => {
@@ -32,7 +33,10 @@ export const Popup = ({
         return () => {
             clearTimeout(timer);
             if (redirect != null && type == "success") {
-                navigate(redirect);
+                navigate({
+                    pathname: redirect,
+                    search: redirectParams?.toString()
+                });
             }
         };
     }, [open, autoCloseMs, onClose]);

@@ -26,3 +26,17 @@ export interface AuthResponse {
     userDetails: IdentityDetailsDto;
     refreshToken: string | null;
 }
+
+export interface ForgotPasswordRequest {
+    email: string;
+}
+
+export interface ForgotPasswordResponse {
+    tokenHash: string;
+}
+
+export interface RecoveryPasswordRequest {
+    email: string;
+    token: string;
+    newPassword: string;
+}
