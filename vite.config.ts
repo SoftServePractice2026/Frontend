@@ -6,7 +6,7 @@ import path from 'path'
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
 
-  const apiUrl = env.VITE_API_URL
+  const apiUrl = env.VITE_API_URL || 'https://localhost:7087'
 
   return {
     plugins: [
